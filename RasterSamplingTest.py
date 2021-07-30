@@ -24,12 +24,10 @@ import scipy.stats
 import statsmodels.api
 from UnicodeData.CharNames import CharNames
 from RSTFont import RSTFont
-from Bezier import Bezier, BOutline, drawOutline
-import BezierUtilities as butils
+from Bezier import Bezier, BOutline
 from SegmentPen import SegmentPen
 import PathUtilities
 from TestArgumentIterator import TestArgs
-import TextUtilities
 from OutputDatabase import OutputDatabase
 
 # Polynomial = np.polynomial.Polynomial
