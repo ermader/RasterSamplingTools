@@ -1,0 +1,112 @@
+[
+  {
+    "default_tests": [
+      {"glyph": "l"},
+      {"glyph": "I"},
+      {"glyph": "L"},
+      {"glyph": "uni0413"},
+      {"glyph": "uni0422"},
+      {"glyph": "uni04C0"},
+      {"glyph": "uni0627", "direction": "rtl"},
+      {"glyph": "uni0661", "direction": "rtl"},
+      {"glyph": "uni06F1", "direction": "rtl"},
+      {"glyph": "uni093B"},
+      {"glyph": "uni093E"},
+      {"glyph": "uni094E"},
+      {"glyph": "uni0E32"},
+      {"glyph": "uni0E40"},
+      {"glyph": "uni0E45"},
+      {"glyph": "uni3057"},
+      {"glyph": "uni30C8"},
+      {"glyph": "uni30FF"},
+      {"glyph": "uni1175"},
+      {"glyph": "uni3131"},
+      {"glyph": "uni3163"},
+      {"glyph": "uni4E28"},
+      {"glyph": "uni4E85"},
+      {"glyph": "uni4E5A"}
+    ],
+    "test_defaults": {"range": "30-70","width_method": "leastspread", "main_contour": "tallest", "direction": "ltr", "loop_detect": false}
+  },
+  {
+    "ps_name": "AyresRoyal",
+    "test_defaults": {"main_contour": "largest"},
+    "tests": [
+      {"glyph": "f", "range": "30-60"},
+      {"glyph": "i", "range": "25-50"},
+      {"glyph": "j", "range": "40-62"},
+      {"glyph": "l", "range": "20-50"},
+      {"glyph": "m"}
+    ],
+    "ignore_glyphs": ["I", "L"]
+  },
+  {
+    "ps_name": "AyresRoyalPlus",
+    "tests": [
+      {"glyph": "l", "range": "20-50"}
+    ]
+  },
+  {
+    "ps_name": "Loopiejuice-Regular",
+    "tests": [
+      {"glyph": "uni006C"}
+    ]
+  },
+  {
+    "ps_name": "CatwingFuzz-Regular",
+    "tests": [
+      {"glyph":  "l", "width_method":  "rightmost"}
+    ]
+  },
+  {
+    "ps_name": "Pasto-PrintThin",
+    "tests": [
+      {"glyph": "l", "loop_detect": true}
+    ]
+  },
+  {
+    "ps_name": "BakerieRough-Medium",
+    "tests": [
+      {"glyph":  "/l.ss01"},
+      {"glyph": "gid300", "loop_detect": true}
+    ]
+  },
+  {
+    "ps_name": "HelveticaNeue",
+    "tests": [
+      {"glyph": "uni006C"}
+    ]
+  },
+  {
+    "full_name": "Helvetica Neue Bold",
+    "tests": [
+      {"glyph": "l"},
+      {"glyph": "i"}
+    ]
+  },
+  {
+    "family_name": "Helvetica Neue",
+    "tests": [
+      {"glyph": "l"},
+      {"glyph": "j"}
+    ]
+  },
+  {
+    "ps_name": "Annabella-Normal",
+    "tests": [
+      {"glyph": "L", "range": "52-70"}
+    ]
+  },
+  {
+    "ps_name": "AntihistoryRg-Italic",
+    "test_defaults": {"range": "30-64"}
+  },
+  {
+    "full_name": "Goudy Old Style Bold",
+    "ignore_glyphs": ["uni0413", "uni0422", "uni04C0"]
+  },
+  {
+    "full_name": "Goudy Old Style Extra Bold",
+    "ignore_glyphs": ["uni0413", "uni0422", "uni04C0"]
+  }
+]
