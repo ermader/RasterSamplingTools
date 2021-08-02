@@ -9,7 +9,7 @@ Created on February 5, 2021
 import os
 import pathlib
 from sys import argv, exit, stderr
-from TestArgumentIterator import TestArgs
+from TestArguments.TestArgumentIterator import TestArgs
 import RasterSamplingTest
 from FontDatabase import FontDatabase
 from OutputDatabase import OutputDatabase

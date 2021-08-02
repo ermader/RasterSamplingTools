@@ -8,8 +8,8 @@ Created on March 19, 2021
 
 import json
 from re import fullmatch
-from GlyphSpec import GlyphSpec
-from RSTFont import RSTFont
+from TestArguments.GlyphSpec import GlyphSpec
+from TestArguments.RSTFont import RSTFont
 
 class FontDatabase:
     __slots__ = "_db", "_defaultTests", "_testDefaults"

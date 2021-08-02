@@ -6,7 +6,7 @@ Created on October 14, 2020
 @author Eric Mader
 """
 
-import PathUtilities
+from PathLib import PathUtilities
 
 class SegmentPen:
     __slots__ = "_contours", "_glyphSet", "logger", "_lastOnCurve", "_contour", "_segment"

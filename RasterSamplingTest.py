@@ -23,11 +23,11 @@ from matplotlib.gridspec import GridSpec
 import scipy.stats
 import statsmodels.api
 from UnicodeData.CharNames import CharNames
-from RSTFont import RSTFont
-from Bezier import Bezier, BOutline
+from TestArguments.RSTFont import RSTFont
+from PathLib.Bezier import Bezier, BOutline
+from PathLib import PathUtilities
 from SegmentPen import SegmentPen
-import PathUtilities
-from TestArgumentIterator import TestArgs
+from TestArguments.TestArgumentIterator import TestArgs
 from OutputDatabase import OutputDatabase
 
 # Polynomial = np.polynomial.Polynomial
@@ -414,11 +414,7 @@ class RasterSamplingTest(object):
     def outlineFromGlyph(self, glyphName):
         pen = SegmentPen(self.font.glyphSet, self.logger)
         self.font.glyphSet[glyphName].draw(pen)
-        outline = BOutline(self.scaleContours(pen.contours))
-        # outline = BOutline(PathUtilities.rotateContoursAbout(self.scaleContours(pen.contours), [0, 0], ccw=False))
-
-
-        return outline
+        return BOutline(self.scaleContours(pen.contours))
 
     def italicAngleFromColonMethod(self):
         # Assumes that the colon glyph is always named "colon'
