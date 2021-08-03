@@ -23,7 +23,7 @@ from matplotlib.gridspec import GridSpec
 import scipy.stats
 import statsmodels.api
 from UnicodeData.CharNames import CharNames
-from TestArguments.RSTFont import RSTFont
+from TestArguments.Font import Font
 from PathLib.Bezier import Bezier, BOutline
 from PathLib import PathUtilities
 from SegmentPen import SegmentPen
@@ -191,7 +191,7 @@ class RasterSamplingTest(object):
 
     def __init__(self, args):
         self._args = args
-        self._font = RSTFont(args.fontFile, fontName=args.fontName, fontNumber=args.fontNumber)
+        self._font = Font(args.fontFile, fontName=args.fontName, fontNumber=args.fontNumber)
 
         logging.basicConfig(level=logging.DEBUG if args.debug else logging.WARNING)
         self.logger = logging.getLogger("raster-sampling-test")
