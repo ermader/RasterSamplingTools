@@ -9,10 +9,8 @@ Created on October 26, 2020
 import os
 from sys import argv, exit, stderr
 import re
-from io import StringIO
 import math
 import logging
-import warnings
 import statistics
 import numpy as np
 import matplotlib
@@ -26,7 +24,7 @@ from UnicodeData.CharNames import CharNames
 from TestArguments.Font import Font
 from PathLib.Bezier import Bezier, BOutline
 from PathLib import PathUtilities
-from SegmentPen import SegmentPen
+from PathLib.SegmentPen import SegmentPen
 from TestArguments.TestArgumentIterator import TestArgs
 from OutputDatabase import OutputDatabase
 
