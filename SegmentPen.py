@@ -6,7 +6,7 @@ Created on October 14, 2020
 @author Eric Mader
 """
 
-from PathLib import PathUtilities
+from PathLib.Transform import Transform
 
 class SegmentPen:
     __slots__ = "_contours", "_glyphSet", "logger", "_lastOnCurve", "_contour", "_segment"
@@ -83,7 +83,7 @@ class SegmentPen:
         self.logger.debug(f"addComponent(\"{glyphName}\", {transformation}")
         if transformation != self.identityTransformation:
             xScale, xyScale, yxScale, yScale, xOffset, yOffset = transformation
-            m = PathUtilities.PUTransform._matrix(
+            m = Transform._matrix(
                 a=xScale,
                 b=xyScale,
                 c=yxScale,
@@ -91,7 +91,7 @@ class SegmentPen:
                 m=xOffset,
                 n=yOffset
             )
-            t = PathUtilities.PUTransform(m)
+            t = Transform(m)
         else:
             t = None
 
