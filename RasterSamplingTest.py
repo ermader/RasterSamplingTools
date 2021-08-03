@@ -383,7 +383,7 @@ class RasterSamplingTest(object):
         upem = self._font.unitsPerEm()
         if upem != 1000:
             scaleFactor = 1000 / upem
-            scaleTransform = PathUtilities.PUTransform.scale(scaleFactor, scaleFactor)
+            scaleTransform = Transform.scale(scaleFactor, scaleFactor)
             return scaleTransform.applyToContours(contours)
 
         return contours
@@ -489,7 +489,7 @@ class RasterSamplingTest(object):
         outlineBoundsCenter = outlineBoundsLeft + outlineBounds.width / 2
 
         baseline = [(min(0, outlineBounds.left), 0), (outlineBounds.right, 0)]
-        baselineBounds = PathUtilities.PUBoundsRectangle(*baseline)
+        baselineBounds = PathUtilities.BoundsRectangle(*baseline)
 
         overallBounds = baselineBounds.union(outlineBounds)
 
@@ -538,7 +538,7 @@ class RasterSamplingTest(object):
         for contour in contours[1:]:
             contourBounds = contour.boundsRectangle
 
-            if mainBounds.relationTo(contourBounds) == PathUtilities.PUBoundsRectangle.relationEncloses and \
+            if mainBounds.relationTo(contourBounds) == PathUtilities.BoundsRectangle.relationEncloses and \
                 contourBounds.area / mainBounds.area >= 0.05:
                 innerContours.append(contour)
                 for curve in contour:
