@@ -24,6 +24,7 @@ from UnicodeData.CharNames import CharNames
 from TestArguments.Font import Font
 from PathLib.Bezier import Bezier, BOutline
 from PathLib import PathUtilities
+from PathLib.Transform import Transform
 from PathLib.SegmentPen import SegmentPen
 from TestArguments.TestArgumentIterator import TestArgs
 from OutputDatabase import OutputDatabase

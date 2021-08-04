@@ -9,7 +9,7 @@ Created on March 19, 2021
 import json
 from re import fullmatch
 from TestArguments.GlyphSpec import GlyphSpec
-from TestArguments.RSTFont import RSTFont
+from TestArguments.Font import Font
 
 class FontDatabase:
     __slots__ = "_db", "_defaultTests", "_testDefaults"
@@ -116,16 +116,16 @@ def printTests(db, font):
 
 def test():
     db = FontDatabase("FontDatabase.json")
-    printTests(db, RSTFont("/Users/emader/Downloads/Eric-test-fonts/Ayres Royal/AyresRoy.otf"))
-    printTests(db, RSTFont("/Users/emader/Downloads/Eric-test-fonts/Ayres Royal/AYRERP__.TTF"))
-    printTests(db, RSTFont("/Users/emader/Downloads/TestFonts/Rough paths/BakerieRough/BakerieRough-Medium.otf"))
-    printTests(db, RSTFont("/Users/emader/Downloads/AppFonts/Loopiejuice/Loopiejuice-Regular.ttf"))
-    printTests(db, RSTFont("/Users/emader/Downloads/AppFonts/GoudyOldStyle/GoudyOldSty-Reg.ttf"))
-    printTests(db, RSTFont("/Users/emader/Downloads/AppFonts/GoudyOldStyle/GoudyOldSty-Bol.ttf"))
-    printTests(db, RSTFont("/Users/emader/Downloads/Eric-test-fonts/Catwing/catwing fuzz.otf"))
-    printTests(db, RSTFont("/System/Library/Fonts/GeezaPro.ttc", fontName="GeezaPro"))
-    printTests(db, RSTFont("/System/Library/Fonts/Supplemental/AppleMyungjo.ttf"))
-    printTests(db, RSTFont("/System/Library/Fonts/STHeiti Medium.ttc", fontName="STHeitiSC-Medium"))
+    printTests(db, Font("/Users/emader/Downloads/Eric-test-fonts/Ayres Royal/AyresRoy.otf"))
+    printTests(db, Font("/Users/emader/Downloads/Eric-test-fonts/Ayres Royal/AYRERP__.TTF"))
+    printTests(db, Font("/Users/emader/Downloads/TestFonts/Rough paths/BakerieRough/BakerieRough-Medium.otf"))
+    printTests(db, Font("/Users/emader/Downloads/AppFonts/Loopiejuice/Loopiejuice-Regular.ttf"))
+    printTests(db, Font("/Users/emader/Downloads/AppFonts/GoudyOldStyle/GoudyOldSty-Reg.ttf"))
+    printTests(db, Font("/Users/emader/Downloads/AppFonts/GoudyOldStyle/GoudyOldSty-Bol.ttf"))
+    printTests(db, Font("/Users/emader/Downloads/Eric-test-fonts/Catwing/catwing fuzz.otf"))
+    printTests(db, Font("/System/Library/Fonts/GeezaPro.ttc", fontName="GeezaPro"))
+    printTests(db, Font("/System/Library/Fonts/Supplemental/AppleMyungjo.ttf"))
+    printTests(db, Font("/System/Library/Fonts/STHeiti Medium.ttc", fontName="STHeitiSC-Medium"))
 
 if __name__ == "__main__":
     test()
