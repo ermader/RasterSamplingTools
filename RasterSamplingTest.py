@@ -508,13 +508,15 @@ class RasterSamplingTest(object):
         # Make sure contour with the largest bounding rectangle has
         # an area that is at least 10% of the area of the bounding rectangle
         # of the whole glyph
-        outerPercent = round(mainBounds.area / outlineBounds.area * 100.0, 3)
+        outerAreaPercent = round(mainBounds.area / outlineBounds.area * 100.0, 3)
+        outerHeightPercent = round(mainBounds.height / outlineBounds.height * 100.0, 3)
 
         if args.outdb:
-            glyphResults["main_contour_percent"] = outerPercent
+            glyphResults["main_contour_area_percent"] = outerAreaPercent
+            glyphResults["main_contour_height_percent"] = outerHeightPercent
 
-        if outerPercent < 10.0:
-            print(f"{indent}The largest contour has an area that is only {outerPercent}% of the total.")
+        if outerAreaPercent < 10.0 or outerHeightPercent < 50.0:
+            print(f"{indent}The largest contour has an area that is only {outerAreaPercent}% of the total.")
             if args.silent: print()
 
             if args.outdb:
@@ -526,7 +528,7 @@ class RasterSamplingTest(object):
             self.drawPathToAxis(path, outlineBounds, ax)
             ax.text(outlineCenter, outlineBounds.top + 10, f"{fullName}\n{charInfo}", va="bottom", ha="center")
             ax.text(outlineCenter, outlineBounds.bottom - 10,
-                    f"No outer contour\nLargest area is {outerPercent}% of the total", va="top", ha="center")
+                    f"No main contour\nLargest area is {outerAreaPercent}% of the total", va="top", ha="center")
             ax.set_axis_off()
             plt.savefig(svgName)
             plt.close(fig)
