@@ -517,6 +517,7 @@ class RasterSamplingTest(object):
 
         if outerAreaPercent < 10.0 or outerHeightPercent < 50.0:
             print(f"{indent}The largest contour has an area that is only {outerAreaPercent}% of the total.")
+            print(f"{indent}The tallest contour has an height that is only {outerHeightPercent}% of the total.")
             if args.silent: print()
 
             if args.outdb:
@@ -528,7 +529,7 @@ class RasterSamplingTest(object):
             self.drawPathToAxis(path, outlineBounds, ax)
             ax.text(outlineCenter, outlineBounds.top + 10, f"{fullName}\n{charInfo}", va="bottom", ha="center")
             ax.text(outlineCenter, outlineBounds.bottom - 10,
-                    f"No main contour\nLargest area is {outerAreaPercent}% of the total", va="top", ha="center")
+                    f"No main contour\nLargest area is {outerAreaPercent}% of the total\nTallest height is {outerHeightPercent}% of the total", va="top", ha="center")
             ax.set_axis_off()
             plt.savefig(svgName)
             plt.close(fig)
