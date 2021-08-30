@@ -9,10 +9,13 @@ Created on February 5, 2021
 import os
 import pathlib
 from sys import argv, exit, stderr
+import pkg_resources
 from TestArguments.TestArgumentIterator import TestArgs
-import RasterSamplingTest
-from FontDatabase import FontDatabase
-from OutputDatabase import OutputDatabase
+
+from RasterSamplingTools import RasterSamplingTest
+from RasterSamplingTools.FontDatabase import FontDatabase
+from RasterSamplingTools.OutputDatabase import OutputDatabase
+
 
 class RasterSamplingToolArgs(TestArgs):
     __slots__ = "inputDir", "outputDir"
@@ -59,7 +62,7 @@ def main():
         exit(1)
 
     testCount = failedCount = 0
-    db = FontDatabase("FontDatabase.json")
+    db = FontDatabase(pkg_resources.resource_filename("RasterSamplingTool", "FontDatabase.json"))
     outdb = OutputDatabase(os.path.join(toolArgs.outputDir, "OutputDatabase.json"))
 
     for path in pathlib.Path(toolArgs.inputDir).rglob("*.[otOT][tT][cfCF]"):

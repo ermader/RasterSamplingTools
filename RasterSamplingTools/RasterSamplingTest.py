@@ -27,7 +27,9 @@ from PathLib import PathUtilities
 from PathLib.Transform import Transform
 from PathLib.SegmentPen import SegmentPen
 from TestArguments.TestArgumentIterator import TestArgs
-from OutputDatabase import OutputDatabase
+
+from RasterSamplingTools.OutputDatabase import OutputDatabase
+
 
 # Polynomial = np.polynomial.Polynomial
 

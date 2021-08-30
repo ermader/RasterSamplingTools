@@ -1,0 +1,11 @@
+# ignore OS X metadata
+.DS_Store
+
+# ignore Python build stuff
+/*.egg-info/
+/build/
+/dist/
+__pycache__
+
+# ignore any .svg files from test runs
+*.svg
