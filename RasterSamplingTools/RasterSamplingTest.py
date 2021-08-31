@@ -30,6 +30,20 @@ from TestArguments.TestArgumentIterator import TestArgs
 
 from RasterSamplingTools.OutputDatabase import OutputDatabase
 
+_usage = """
+Usage: rastersamplingtest options...
+
+Options:
+--font (fontFile.ttf | fontFile.otf | fontFile.ttc fontName | fontFile.otc fontName)
+--glyph (char | /glyphName | uni<4-6 hex digits> | gid<1-3 decimal digits>)
+[--widthMethod (leftmost | rightmost | leastspread)] leftmost
+[--mainContour (largest | leftmost | rightmost | tallest)] tallest
+[--range XX-YY] 30-70
+[--direction (ltr | rtl)] ltr
+[--outdb databaseFilePath]
+[--loopDetection]
+[--debug]
+"""
 
 # Polynomial = np.polynomial.Polynomial
 
@@ -814,7 +828,7 @@ def main():
     args = None
     programName = os.path.basename(argumentList.pop(0))
     if len(argumentList) == 0:
-        print(__doc__, file=stderr)
+        print(_usage, file=stderr)
         exit(1)
     try:
         args = RasterSamplingTestArgs.forArguments(argumentList)

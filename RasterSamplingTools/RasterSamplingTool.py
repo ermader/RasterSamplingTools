@@ -16,6 +16,10 @@ from RasterSamplingTools import RasterSamplingTest
 from RasterSamplingTools.FontDatabase import FontDatabase
 from RasterSamplingTools.OutputDatabase import OutputDatabase
 
+_usage = """
+Usage:
+rastersamplingtool --input inputPath --output outputPath
+"""
 
 class RasterSamplingToolArgs(TestArgs):
     __slots__ = "inputDir", "outputDir"
@@ -23,7 +27,7 @@ class RasterSamplingToolArgs(TestArgs):
     def __init__(self):
         self.inputDir = ""
         self.outputDir = ""
-        TestArgs.__init__(self)
+        TestArgs.__init__(self, needGlyph=False)
 
     @classmethod
     def forArguments(cls, argumentList):
@@ -52,7 +56,7 @@ def main():
     args = None
     programName = os.path.basename(argumentList.pop(0))
     if len(argumentList) == 0:
-        print(__doc__, file=stderr)
+        print(_usage, file=stderr)
         exit(1)
 
     try:
