@@ -55,7 +55,7 @@
   {
     "ps_name": "CatwingFuzz-Regular",
     "tests": [
-      {"glyph":  "l", "width_method":  "rightmost"}
+      {"glyph": "l", "width_method": "rightmost"}
     ]
   },
   {
@@ -67,7 +67,7 @@
   {
     "ps_name": "BakerieRough-Medium",
     "tests": [
-      {"glyph":  "/l.ss01"},
+      {"glyph": "/l.ss01"},
       {"glyph": "gid300", "loop_detect": true}
     ]
   },
