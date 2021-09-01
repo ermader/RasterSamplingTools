@@ -26,7 +26,7 @@
       {"glyph": "uni4E85"},
       {"glyph": "uni4E5A"}
     ],
-    "test_defaults": {"range": "30-70","width_method": "leastspread", "main_contour": "tallest", "direction": "ltr", "loop_detect": false}
+    "test_defaults": {"range": "30-70", "width_method": "leastspread", "main_contour": "tallest", "direction": "ltr", "loop_detect": false}
   },
   {
     "ps_name": "AyresRoyal",

@@ -27,7 +27,7 @@ The default settings object has two fields:
 * **test_defaults** : a single test object without a *glyph* field, giving the default values for the fields.
 
 ### The test_defaults object
-    "test_defaults": {"range": "30-70","width_method": "leastspread", "main_contour": "tallest", "direction": "ltr", "loop_detect": false}
+    "test_defaults": {"range": "30-70", "width_method": "leastspread", "main_contour": "tallest", "direction": "ltr", "loop_detect": false}
 
 ## The per-font Object
 Per-font objects have the following fields:
