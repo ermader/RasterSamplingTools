@@ -9,7 +9,7 @@ git clone https://github.com/ermader/PathLib
 # do the installs
 
 for dir in FontDocTools UnicodeData TestArguments PathLib RasterSamplingTools ; do
-  cd dir
+  cd $dir
   # echo installing $dir
   python setup.py install
   cd ..
