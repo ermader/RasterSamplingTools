@@ -31,55 +31,14 @@ The tools require Python 3.8 or later, and the [FontDocTools](https://bitbucket.
 
     Remember the last line – you will need to re-run it to activate the virtual environment each time you log in or open a new terminal window.
 
- * If you haven’t yet, download the FontDocTools package onto your system:
-
-        cd /parent/directory/for/FontDocTools/
-        git clone https://bitbucket.org/LindenbergSW/FontDocTools
-
-* Go into the FontDocTools directory, and install the FontDocTools package along with its prerequisites, the fonttools package and, on macOS, the PyObjC package:
-
-        cd FontDocTools
-        python setup.py install
-
- * If you haven’t yet, download the UnicodeData package onto your system:
-
-        cd /parent/directory/for/UnicodeData/
-        git clone https://github.com/ermader/UnicodeData
-
-* Go into the UnicodeData directory, and install the UnicodeData package along with its prerequisites:
-
-        cd UnicodeData
-        python setup.py install
-
- * If you haven’t yet, download the TestArguments package onto your system:
-
-        cd /parent/directory/for/TestArguments/
-        git clone https://github.com/ermader/TestArguments
-
-* Go into the TestArguments directory, and install the TestArguments package along with its prerequisites:
-
-        cd TestArguments
-        python setup.py install
-
- * If you haven’t yet, download the PathLib package onto your system:
-
-        cd /parent/directory/for/PathLib/
-        git clone https://github.com/ermader/PathLib
-
-* Go into the PathLib directory, and install the PathkLib package along with its prerequisites:
-
-        cd PathLib
-        python setup.py install
-
  * If you haven’t yet, download the RasterSamplingTools package onto your system:
 
         cd /parent/directory/for/RasterSamplingTools/
         git clone https://github.com/ermader/RasterSamplingTools
 
-* Go into the RasterSamplingTools directory, and install the RasterSamplingTools package along with its prerequisites:
+* Run the `install.sh` script. This will download and install all required packages:
 
-        cd RasterSamplingTools
-        python setup.py install
+        source RasterSamplingTools/install.sh
 
 If you’d like to run the test cases in the Tests directories, you will also need to install the [pytest](https://docs.pytest.org/en/latest/index.html) package from the Python Package Index:
 
