@@ -66,7 +66,7 @@ def main():
         exit(1)
 
     testCount = failedCount = 0
-    db = FontDatabase(pkg_resources.resource_filename("RasterSamplingTool", "FontDatabase.json"))
+    db = FontDatabase(pkg_resources.resource_filename("RasterSamplingTools", "FontDatabase.json"))
     outdb = OutputDatabase(os.path.join(toolArgs.outputDir, "OutputDatabase.json"))
 
     for path in pathlib.Path(toolArgs.inputDir).rglob("*.[otOT][tT][cfCF]"):
