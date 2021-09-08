@@ -36,10 +36,10 @@ Usage: rastersamplingtest options...
 Options:
 --font (fontFile.ttf | fontFile.otf | fontFile.ttc fontName | fontFile.otc fontName)
 --glyph (char | /glyphName | uni<4-6 hex digits> | gid<1-5 decimal digits>)
-[--widthMethod (leftmost | rightmost | leastspread)] leftmost]
-[--mainContour (largest | leftmost | rightmost | tallest)] tallest]
-[--range XX-YY] 30-70]
-[--direction (ltr | rtl)] ltr]
+[--widthMethod (leftmost | rightmost | leastspread)] leftmost
+[--mainContour (largest | leftmost | rightmost | tallest)] tallest
+[--range XX-YY] 30-70
+[--direction (ltr | rtl)] ltr
 [--outdb databaseFilePath]
 [--loopDetection]
 [--debug]
