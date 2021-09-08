@@ -11,7 +11,7 @@ See [RasterSamplingTest](RasterSamplingTest.md) for details.
 This tool recursively scans a give directory structure for TrueType fonts. And calls `RasterSamplingTest` consulting `FontDatabase.json` for the list
 of glyphs to test. Results are recorded in `OutputDatabase.json`.
 
-See [RasterSamplingTool](RasterSamplingTool.md) for details.
+See [RasterSamplingTool](RasterSamplingTool.md) and [FontDatabase](FontDatabase.md) for details.
 
 ## Installation
 
@@ -23,7 +23,7 @@ The tools require Python 3.8 or later, and the [FontDocTools](https://bitbucket.
 
     On macOS 10.15, this causes the OS to offer installation of command line tools, which include Python 3.8. Otherwise, if you don’t have at least Python 3.8, download and install a current version of [Python 3](https://www.python.org/downloads/mac-osx/).
 
-* Recommended: Create a virtual environment to separate tehe tools from other Python apps. Go into the directory where you’d like to keep the virtual environment for FontDocTools, create the environment, and activate it:
+* Recommended: Create a virtual environment to separate the tools from other Python apps. Go into the directory where you’d like to keep the virtual environment for FontDocTools, create the environment, and activate it:
 
         cd /parent/directory/for/env/
         python3 -m venv FontTools-env

@@ -562,11 +562,6 @@ class RasterSamplingTest(object):
                 for curve in contour:
                     curveList.append(curve)
 
-        if args.widthMethod == RasterSamplingTestArgs.widthMethodLeftmost:
-            p2function = self.leftmostIntersection
-        elif args.widthMethod == RasterSamplingTestArgs.widthMethodRightmost:
-            p2function = self.rightmostIntersection
-
         doLeft, doRight = widthSelection[args.widthMethod]
 
         rastersLeft = []
