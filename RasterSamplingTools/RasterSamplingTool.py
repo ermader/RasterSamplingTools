@@ -89,6 +89,8 @@ def main():
             try:
                 rasterTest = RasterSamplingTest.RasterSamplingTest(testArgs)
                 testFont = rasterTest.font
+                print(f"    {testFont.fullName}:")
+                rasterTest.italicAngleFromColonMethod()
                 info = db.getFontInfo(testFont)
                 tests = db.getTests(testFont, info)
                 for test in tests:

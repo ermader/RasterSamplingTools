@@ -431,16 +431,31 @@ class RasterSamplingTest(object):
         self.font.glyphSet[glyphName].draw(pen)
         return BOutline(self.scaleContours(pen.contours))
 
+    def outlineFromChar(self, char):
+        charCode = ord(char) if type(char) == type("") else char
+        charName = self.font.glyphNameForCharacterCode(charCode)
+        return self.outlineFromGlyph(charName) if charName else None
+
     def italicAngleFromColonMethod(self):
-        # Assumes that the colon glyph is always named "colon'
-        outline = self.outlineFromGlyph("colon")
+        outline = self.outlineFromChar(":")
 
-        # Assumes that the colon glyph has two contours, one for each dot
-        p0 = outline.contours[0].boundsRectangle.centerPoint
-        p1 = outline.contours[1].boundsRectangle.centerPoint
+        if outline and len(outline.contours) == 2:
+            # We assume that the colon glyph has two contours, one for each dot
+            p0 = outline.contours[0].boundsRectangle.centerPoint
+            p1 = outline.contours[1].boundsRectangle.centerPoint
 
-        angle = PathUtilities.slopeAngle([p0, p1])
-        return round(angle, 1)
+            angle = round(PathUtilities.slopeAngle([p0, p1]), 1)
+
+            args = self._args
+            indent = "        " if args.silent else ""
+            print(f"{indent}italic angle from colon method = {angle}\u00B0")
+            if args.outdb:
+                fontEntry = args.outdb.getEntry(self._font)
+                fontEntry["italic_angle_from_colon_method"] = angle
+
+            return angle
+
+        return None
 
     def run(self):
         widthMethodStrings = {
@@ -474,8 +489,8 @@ class RasterSamplingTest(object):
             charInfo = f"{gidSpec} {glyphName}"
 
         if args.silent:
-            indent = "    "
-            print(f"{indent}{fullName} {charInfo}:")
+            indent = "        "
+            print(f"{indent}{charInfo}:")
 
         if args.outdb:
             fontEntry = args.outdb.getEntry(font)
@@ -682,7 +697,7 @@ class RasterSamplingTest(object):
         mxn = myn * b + a
 
         if missedRasterCount > 0:
-            print(f"{missedRasterCount} rasters did not intersect the glyph.")
+            print(f"{indent}{missedRasterCount} rasters did not intersect the glyph.")
 
         # if rValue == 0:
         #     print(f"{indent}rValue == {rValue}, pValue == {pValue}!")
