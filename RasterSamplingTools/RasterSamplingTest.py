@@ -439,10 +439,24 @@ class RasterSamplingTest(object):
     def italicAngleFromColonMethod(self):
         outline = self.outlineFromChar(":")
 
-        if outline and len(outline.contours) == 2:
-            # We assume that the colon glyph has two contours, one for each dot
-            p0 = outline.contours[0].boundsRectangle.centerPoint
-            p1 = outline.contours[1].boundsRectangle.centerPoint
+
+        # We accept more than two contours if the two largest enclose all the others...
+        if outline and len(outline.contours) >= 2:
+            contours = outline.contours.copy()
+            self.sortByArea(contours, reverse=True)
+
+            b0 = contours[0].boundsRectangle
+            b1 = contours[1].boundsRectangle
+
+            # make sure any other contours are enclosed by one of the two biggest
+            for c in contours[2:]:
+                b = c.boundsRectangle
+                if not (b0.encloses(b) or b1.encloses(b)):
+                    return None
+
+            # We assume that the two largest contours are the dots
+            p0 = b0.centerPoint
+            p1 = b1.centerPoint
 
             angle = round(PathUtilities.slopeAngle([p0, p1]), 1)
 
@@ -571,8 +585,7 @@ class RasterSamplingTest(object):
         for contour in contours[1:]:
             contourBounds = contour.boundsRectangle
 
-            if mainBounds.relationTo(contourBounds) == PathUtilities.BoundsRectangle.relationEncloses and \
-                contourBounds.area / mainBounds.area >= 0.05:
+            if mainBounds.encloses(contourBounds) and contourBounds.area / mainBounds.area >= 0.05:
                 innerContours.append(contour)
                 for curve in contour:
                     curveList.append(curve)
@@ -719,7 +732,7 @@ class RasterSamplingTest(object):
         minWidth = round(min(widths), 2)
         maxWidth = round(max(widths), 2)
         print(f"{indent}angle = {strokeAngle}\u00B0")
-        # print(f"angle from colon method = {self.italicAngleFromColonMethod()}\u00B0")
+        # self.italicAngleFromColonMethod()
 
 
         widthDict = {"min": minWidth, "q1": q1, "median": median, "mean": avgWidth, "q3": q3, "max": maxWidth}
