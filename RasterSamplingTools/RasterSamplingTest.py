@@ -42,6 +42,7 @@ Options:
 [--direction (ltr | rtl)] (default: ltr)
 [--outdb databaseFilePath]
 [--loopDetection]
+[--colon]
 [--debug]
 """
 
@@ -54,7 +55,7 @@ def keyForValue(dict, value):
     return None
 
 class RasterSamplingTestArgs(TestArgs):
-    __slots__ = "typoBounds", "glyphBounds", "widthMethod", "mainContourType", "loopDetection", "directionAdjust", "outdir", "outdb", "silent", "colon"
+    __slots__ = "typoBounds", "glyphBounds", "widthMethod", "mainContourType", "loopDetection", "directionAdjust", "outdir", "outdb", "silent", "colon", "fullName"
 
     widthMethodLeftmost = 0
     widthMethodRightmost = 1
@@ -80,6 +81,7 @@ class RasterSamplingTestArgs(TestArgs):
         # self.indir = ""
         self.silent = False
         self.colon = False
+        self.fullName = False
         TestArgs.__init__(self)
 
     @classmethod
@@ -505,6 +507,9 @@ class RasterSamplingTest(object):
 
         if args.silent:
             indent = "        "
+
+            if args.fullName:
+                print(f"    {font.fullName}:")
 
         if args.colon:
             colonAngle = self.italicAngleFromColonMethod()
