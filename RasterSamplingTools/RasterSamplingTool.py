@@ -88,7 +88,7 @@ def main():
         while True:
             try:
                 testArgs.colon = True
-                testArgs.fullName = True
+                testArgs.showFullName = True
                 rasterTest = RasterSamplingTest.RasterSamplingTest(testArgs)
                 testFont = rasterTest.font
                 info = db.getFontInfo(testFont)
@@ -108,7 +108,7 @@ def main():
                         print("Failed\n")
                     finally:
                         testArgs.colon = False
-                        testArgs.fullName = False
+                        testArgs.showFullName = False
 
                     testCount += 1
 

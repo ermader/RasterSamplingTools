@@ -55,7 +55,7 @@ def keyForValue(dict, value):
     return None
 
 class RasterSamplingTestArgs(TestArgs):
-    __slots__ = "typoBounds", "glyphBounds", "widthMethod", "mainContourType", "loopDetection", "directionAdjust", "outdir", "outdb", "silent", "colon", "fullName"
+    __slots__ = "typoBounds", "glyphBounds", "widthMethod", "mainContourType", "loopDetection", "directionAdjust", "outdir", "outdb", "silent", "colon", "showFullName"
 
     widthMethodLeftmost = 0
     widthMethodRightmost = 1
@@ -81,7 +81,7 @@ class RasterSamplingTestArgs(TestArgs):
         # self.indir = ""
         self.silent = False
         self.colon = False
-        self.fullName = False
+        self.showFullName = False
         TestArgs.__init__(self)
 
     @classmethod
@@ -508,7 +508,7 @@ class RasterSamplingTest(object):
         if args.silent:
             indent = "        "
 
-            if args.fullName:
+            if args.showFullName:
                 print(f"    {font.fullName}:")
 
         if args.colon:
