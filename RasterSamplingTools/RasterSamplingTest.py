@@ -54,7 +54,7 @@ def keyForValue(dict, value):
     return None
 
 class RasterSamplingTestArgs(TestArgs):
-    __slots__ = "typoBounds", "glyphBounds", "widthMethod", "mainContourType", "loopDetection", "directionAdjust", "outdir", "outdb", "silent"
+    __slots__ = "typoBounds", "glyphBounds", "widthMethod", "mainContourType", "loopDetection", "directionAdjust", "outdir", "outdb", "silent", "colon"
 
     widthMethodLeftmost = 0
     widthMethodRightmost = 1
@@ -79,6 +79,7 @@ class RasterSamplingTestArgs(TestArgs):
         self.outdb = None
         # self.indir = ""
         self.silent = False
+        self.colon = False
         TestArgs.__init__(self)
 
     @classmethod
@@ -109,6 +110,8 @@ class RasterSamplingTestArgs(TestArgs):
         elif argument == "--outdb":
             extra = arguments.nextExtra("output db")
             self.processOutputDB(extra)
+        elif argument == "--colon":
+            self.colon = True
         else:
             TestArgs.processArgument(self, argument, arguments)
 
@@ -449,23 +452,16 @@ class RasterSamplingTest(object):
             b1 = contours[1].boundsRectangle
 
             # make sure any other contours are enclosed by one of the two biggest
-            for c in contours[2:]:
-                b = c.boundsRectangle
-                if not (b0.encloses(b) or b1.encloses(b)):
-                    return None
+            # for c in contours[2:]:
+            #     b = c.boundsRectangle
+            #     if not (b0.encloses(b) or b1.encloses(b)):
+            #         return None
 
             # We assume that the two largest contours are the dots
             p0 = b0.centerPoint
             p1 = b1.centerPoint
 
             angle = round(PathUtilities.slopeAngle([p0, p1]), 1)
-
-            args = self._args
-            indent = "        " if args.silent else ""
-            print(f"{indent}italic angle from colon method = {angle}\u00B0")
-            if args.outdb:
-                fontEntry = args.outdb.getEntry(self._font)
-                fontEntry["italic_angle_from_colon_method"] = angle
 
             return angle
 
@@ -502,14 +498,22 @@ class RasterSamplingTest(object):
         else:
             charInfo = f"{gidSpec} {glyphName}"
 
-        if args.silent:
-            indent = "        "
-            print(f"{indent}{charInfo}:")
-
         if args.outdb:
             fontEntry = args.outdb.getEntry(font)
             testResults = args.outdb.getTestResults(fontEntry)
             glyphNameSpec = args.glyphSpec.nameSpecForFont(font)
+
+        if args.silent:
+            indent = "        "
+
+        if args.colon:
+            colonAngle = self.italicAngleFromColonMethod()
+            print(f"{indent}italic angle from colon method = {colonAngle}\u00B0")
+            if args.outdb:
+                fontEntry["italic_angle_from_colon_method"] = colonAngle
+
+        if args.silent:
+            print(f"{indent}{charInfo}:")
 
         widthMethodString = widthMethodStrings[args.widthMethod]
         loopDetectionString = "_loop" if args.loopDetection else ""
@@ -731,8 +735,8 @@ class RasterSamplingTest(object):
         q3 = round(quartiles[2], 2)
         minWidth = round(min(widths), 2)
         maxWidth = round(max(widths), 2)
+
         print(f"{indent}angle = {strokeAngle}\u00B0")
-        # self.italicAngleFromColonMethod()
 
 
         widthDict = {"min": minWidth, "q1": q1, "median": median, "mean": avgWidth, "q3": q3, "max": maxWidth}

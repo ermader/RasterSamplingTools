@@ -87,10 +87,10 @@ def main():
 
         while True:
             try:
+                testArgs.colon = True
                 rasterTest = RasterSamplingTest.RasterSamplingTest(testArgs)
                 testFont = rasterTest.font
                 print(f"    {testFont.fullName}:")
-                rasterTest.italicAngleFromColonMethod()
                 info = db.getFontInfo(testFont)
                 tests = db.getTests(testFont, info)
                 for test in tests:
@@ -106,13 +106,15 @@ def main():
                     except:
                         failedCount += 1
                         print("Failed\n")
+                    finally:
+                        testArgs.colon = False
 
                     testCount += 1
 
             except StopIteration:
                 break
 
-            if not testArgs.fontFile.endswith(".ttc"): break
+            if not (testArgs.fontFile.endswith(".ttc") or testArgs.fontFile.endswith("otc")): break
             testArgs.fontNumber += 1
 
     print(f"{testCount} tests, {failedCount} failures.")
