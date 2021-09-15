@@ -30,7 +30,7 @@ class OutputDatabase(object):
         psName = font.postscriptName
 
         if psName not in self._db:
-            self._db[psName] = {"test_results": {}}
+            self._db[psName] = {"full_name": font.fullName, "test_results": {}}
 
         return self._db[psName]
 
