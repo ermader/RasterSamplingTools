@@ -10,7 +10,7 @@ import os
 import pathlib
 from sys import argv, exit, stderr
 import pkg_resources
-from TestArguments.TestArgumentIterator import TestArgs
+from TestArguments.CommandLineArguments import CommandLineOption, CommandLineArgs
 
 from RasterSamplingTools import RasterSamplingTest
 from RasterSamplingTools.FontDatabase import FontDatabase
@@ -21,29 +21,15 @@ Usage:
 rastersamplingtool --input inputPath --output outputPath
 """
 
-class RasterSamplingToolArgs(TestArgs):
-    __slots__ = "inputDir", "outputDir"
+class RasterSamplingToolArgs(CommandLineArgs):
+    options = [
+        CommandLineOption("input", None, lambda a: a.nextExtra("input directory"), "inputDir", None),
+        CommandLineOption("output", None, lambda a: a.nextExtra("output directory"), "outputDir", None),
+    ]
 
     def __init__(self):
-        self.inputDir = ""
-        self.outputDir = ""
-        TestArgs.__init__(self, needGlyph=False)
-
-    @classmethod
-    def forArguments(cls, argumentList):
-        args = RasterSamplingToolArgs()
-        args.fontFile = "(dummy)"  # so TestArgumentIterator doesn't complain about missing "--font"...
-        args.processArguments(argumentList)
-        return args
-
-    def processArgument(self, argument, arguments):
-        if argument == "--input":
-            self.inputDir = arguments.nextExtra("input directory")
-        elif argument == "--output":
-            self.outputDir = arguments.nextExtra("output directory")
-        else:
-            TestArgs.processArgument(self, argument, arguments)
-
+        CommandLineArgs.__init__(self)
+        self._options.extend(RasterSamplingToolArgs.options)
 
 def checkGlyph(testArgs, testFont):
     if testArgs.glyphName: return testFont.hasGlyphName(testArgs.glyphName)
@@ -60,7 +46,8 @@ def main():
         exit(1)
 
     try:
-        toolArgs = RasterSamplingToolArgs.forArguments(argumentList)
+        toolArgs = RasterSamplingToolArgs()
+        toolArgs.processArguments(argumentList)
     except ValueError as error:
         print(programName + ": " + str(error), file=stderr)
         exit(1)
@@ -72,7 +59,9 @@ def main():
     for path in pathlib.Path(toolArgs.inputDir).rglob("*.[otOT][tT][cfCF]"):
         testArgs = RasterSamplingTest.RasterSamplingTestArgs()
         testArgs.fontFile = str(path)
+        testArgs.fontName = None
         testArgs.fontNumber = 0
+        testArgs.debug = False
         # testArgs.glyphName = toolArgs.glyphName
         # testArgs.glyphID = toolArgs.glyphID
         # testArgs.charCode = toolArgs.charCode
@@ -96,12 +85,17 @@ def main():
                 for test in tests:
                     try:
                         glyph, range, widthMethod, mainContour, direction, loopDetect = db.getTest(test)
-                        testArgs.processGlyph(glyph)
-                        testArgs.processRange(range)
-                        testArgs.processWidthMethod(widthMethod)
-                        testArgs.processMainContourType(mainContour)
-                        testArgs.processDirection(direction)
-                        testArgs.loopDetection = loopDetect
+
+                        propsDict = {
+                            "glyphSpec": glyph,
+                            "range": range,
+                            "widthMethod": widthMethod,
+                            "mainContourType": mainContour,
+                            "directionAdjust": direction,
+                            "loopDetection": loopDetect
+                        }
+
+                        testArgs.setProps(propsDict)
                         rasterTest.run()
                     except:
                         failedCount += 1

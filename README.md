@@ -13,6 +13,11 @@ of glyphs to test. Results are recorded in `OutputDatabase.json`.
 
 See [RasterSamplingTool](RasterSamplingTool.md) and [FontDatabase](FontDatabase.md) for details.
 
+## Summarize
+This tool reads the data in an `OutputDatabase.json` file and prints a summary line for each font.
+
+See [Summarize](Summarize.md) for details.
+
 ## Installation
 
 The tools require Python 3.8 or later, and the [FontDocTools](https://bitbucket.org/LindenbergSW/FontDocTools), [UnicodeData](https://github.com/ermader/UnicodeData), [TestArguments](https://github.com/ermader/TestArguments) and [PathLib](https://github.com/ermader/PathLib) packages. The tools have been tested on macOS 11.5 but may also work on earlier versions of MacOS and other platforms.

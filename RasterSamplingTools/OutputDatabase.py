@@ -32,7 +32,12 @@ class OutputDatabase(object):
         if psName not in self._db:
             self._db[psName] = {"full_name": font.fullName, "test_results": {}}
 
-        return self._db[psName]
+        entry = self._db[psName]
+
+        if "full_name" not in entry:
+            entry["full_name"] = font.fullName
+
+        return entry
 
     def getTestResults(self, entry):
         return entry["test_results"]

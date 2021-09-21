@@ -15,7 +15,7 @@ setup(
     install_requires=[
         "FontDocTools >= 1.2.1",
         "PathLib >= 0.1",
-        "TestArguments >= 0.1",
+        "TestArguments >= 0.2",
         "numpy >= 1.21.2",
         "matplotlib >= 3.4.3",
         "scipy >= 1.7.1",

@@ -26,7 +26,8 @@ from PathLib.Bezier import Bezier, BOutline
 from PathLib import PathUtilities
 from PathLib.Transform import Transform
 from PathLib.SegmentPen import SegmentPen
-from TestArguments.TestArgumentIterator import TestArgs
+from TestArguments.TestArguments import TestArgs
+from TestArguments.CommandLineArguments import CommandLineOption
 
 from RasterSamplingTools.OutputDatabase import OutputDatabase
 
@@ -55,7 +56,7 @@ def keyForValue(dict, value):
     return None
 
 class RasterSamplingTestArgs(TestArgs):
-    __slots__ = "typoBounds", "glyphBounds", "widthMethod", "mainContourType", "loopDetection", "directionAdjust", "outdir", "outdb", "silent", "colon", "showFullName"
+    # __slots__ = "typoBounds", "glyphBounds", "widthMethod", "mainContourType", "loopDetection", "directionAdjust", "outdir", "outdb", "silent", "colon", "showFullName"
 
     widthMethodLeftmost = 0
     widthMethodRightmost = 1
@@ -70,84 +71,31 @@ class RasterSamplingTestArgs(TestArgs):
     mainContourTallest = 3
     mainContourTypes = {"largest": mainContourLargest, "leftmost": mainContourLeftmost, "rightmost": mainContourRightmost, "tallest": mainContourTallest}
 
+    options = [
+        CommandLineOption("bounds", lambda s, a: CommandLineOption.valueFromDict(s.boundsTypes, a, "bounds type"), lambda a: a.nextExtra("bounds"), ("typeBounds", "glyphBounds"), (False, False), required=False),
+        CommandLineOption("widthMethod", lambda s, a: CommandLineOption.valueFromDict(s.widthMethods, a, "width method spec"), lambda a: a.nextExtra("width method"), "widthMethod", "leftmost", required=False),
+        CommandLineOption("range", lambda s, a: s.processRange(a), lambda a: a.nextExtra("range"), "range", "30-70", required=False),
+        CommandLineOption("mainContour", lambda s, a:CommandLineOption.valueFromDict(s.mainContourTypes, a, "main contour type"), lambda a: a.nextExtra("main contour type"), "mainContourType", "tallest", required=False),
+        CommandLineOption("direction", lambda s, a: CommandLineOption.valueFromDict(s.directions, a, "direction"), lambda a: a.nextExtra("direction"), "directionAdjust", "ltr", required=False),
+        CommandLineOption("outdb", lambda s, a: OutputDatabase(a), lambda a: a.nextExtra("output db"), "outdb", "None", required=False),
+        CommandLineOption("loopDetection", None, True, "loopDetection", False, required=False),
+        CommandLineOption("colon", None, True, "colon", False, required=False),
+    ]
+
     def __init__(self):
-        self.typoBounds = self.glyphBounds = False
-        self.widthMethod = self.widthMethodLeftmost
-        self.mainContourType = self.mainContourTallest
-        self.loopDetection = False
-        self.directionAdjust = 1
         self.outdir = ""
-        self.outdb = None
-        # self.indir = ""
         self.silent = False
-        self.colon = False
         self.showFullName = False
         TestArgs.__init__(self)
-
-    @classmethod
-    def forArguments(cls, argumentList):
-        args = RasterSamplingTestArgs()
-        args.processArguments(argumentList)
-        return args
-
-    def processArgument(self, argument, arguments):
-        if argument == "--bounds":
-            boundsType = arguments.nextExtra("bounds")
-            if boundsType in self.boundsTypes.keys():
-                self.typoBounds, self.glyphBounds = self.boundsTypes[boundsType]
-        elif argument == "--widthMethod":
-            extra = arguments.nextExtra("width method")
-            self.processWidthMethod(extra)
-        elif argument == "--loopDetection":
-            self.loopDetection = True
-        elif argument == "--range":
-            extra = arguments.nextExtra("range")
-            self.processRange(extra)
-        elif argument == "--mainContour":
-            extra = arguments.nextExtra("main contour type")
-            self.processMainContourType(extra)
-        elif argument == "--direction":
-            extra = arguments.nextExtra("direction")
-            self.processDirection(extra)
-        elif argument == "--outdb":
-            extra = arguments.nextExtra("output db")
-            self.processOutputDB(extra)
-        elif argument == "--colon":
-            self.colon = True
-        else:
-            TestArgs.processArgument(self, argument, arguments)
-
-    def processWidthMethod(self, widthMethodSpec):
-        if widthMethodSpec in self.widthMethods.keys():
-            self.widthMethod = self.widthMethods[widthMethodSpec]
-        else:
-            raise ValueError(f"Invalid width method “{widthMethodSpec}”.")
-
-    def processMainContourType(self, mainContourSpec):
-        if mainContourSpec in self.mainContourTypes.keys():
-            self.mainContourType = self.mainContourTypes[mainContourSpec]
-        else:
-            raise ValueError(f"Invalid main contour type \"{mainContourSpec}\".")
-
-    def processDirection(self, direction):
-        if direction in self.directions.keys():
-            self.directionAdjust = self.directions[direction]
-        else:
-            raise ValueError(f"Invalid direction \"{direction}\"")
+        self._options.extend(RasterSamplingTestArgs.options)
 
     def processRange(self, rangeSpec):
         m = re.fullmatch("([0-9]{1,3})-([0-9]{1,3})", rangeSpec)
         if m:
             # should check that the values are <= 100 and that first is lower than the second...
-            self.range = tuple((int(s) for s in m.groups()))
+            return tuple((int(s) for s in m.groups()))
         else:
-            raise ValueError(f"Invalid range specification “{rangeSpec}”.")
-
-    def processOutputDB(self, dbName):
-        try:
-            self.outdb = OutputDatabase(dbName)
-        except:
-            raise ValueError(f"Can't open output db file: {dbName}.")
+            raise ValueError(f"Invalid range specification: \"{rangeSpec}\"")
 
     @property
     def widthMethodName(self):
@@ -863,7 +811,8 @@ def main():
         print(_usage, file=stderr)
         exit(1)
     try:
-        args = RasterSamplingTestArgs.forArguments(argumentList)
+        args = RasterSamplingTestArgs()
+        args.processArguments(argumentList)
     except ValueError as error:
         print(programName + ": " + str(error), file=stderr)
         exit(1)
