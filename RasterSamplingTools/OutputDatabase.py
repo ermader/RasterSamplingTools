@@ -14,7 +14,7 @@ class OutputDatabase(object):
         try:
             inFile = open(file)
         except FileNotFoundError:
-            self._db = {}
+            self._db = []
         else:
             # We could check for errors in the input file
             # but it's probably better to just err out...
@@ -29,10 +29,12 @@ class OutputDatabase(object):
     def getEntry(self, font):
         psName = font.postscriptName
 
-        if psName not in self._db:
-            self._db[psName] = {"full_name": font.fullName, "test_results": {}}
-
-        entry = self._db[psName]
+        for entry in self._db:
+            if entry["ps_name"] == psName:
+                break
+        else:
+            entry = {"ps_name": psName, "full_name": font.fullName, "test_results": {}}
+            self._db.append(entry)
 
         if "full_name" not in entry:
             entry["full_name"] = font.fullName

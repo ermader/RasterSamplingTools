@@ -483,7 +483,7 @@ class RasterSamplingTest(object):
             print(f"{indent}(this glyph has {contourCount} contours, so results may not be useful)")
 
         if args.outdb:
-            glyphResults = {"contour_count": contourCount, "width_method": args.widthMethodName, "main_contour": args.mainContourTypeName, "direction": args.directionName}
+            glyphResults = {"glyph_id": args.glyphSpec.glyphIDForFont(font), "contour_count": contourCount, "width_method": args.widthMethodName, "main_contour": args.mainContourTypeName, "direction": args.directionName}
 
         outlineBounds = outline.boundsRectangle
         outlineBoundsLeft = outlineBounds.left if outlineBounds.left >= 0 else 0

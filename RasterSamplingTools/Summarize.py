@@ -54,7 +54,8 @@ def main():
     outFile = open(args.outputFile, "w") if args.outputFile else stdout
     widthFields = args.widthFields
 
-    for psName, entry in outdb._db.items():
+    for entry in outdb._db:
+        psName = entry["ps_name"]
         fullName = entry["full_name"]
         testResults = entry["test_results"]
         widths = {wf: [] for wf in widthFields}

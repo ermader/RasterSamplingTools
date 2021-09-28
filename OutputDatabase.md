@@ -1,9 +1,10 @@
 # Output Database
-`OutputDatabase.json` is a JSON format file written by the `rastersamplingtest` tool. It is a single JSON object where the field names are the postscript names of fonts. The value of each field is a JSON object with a single field named *test_results*, whose value is a *test_results* object.
+`OutputDatabase.json` is a JSON format file written by the `rastersamplingtest` tool. It is a single JSON array of JSON objects with three fields named *ps_name*, *full_name_* and *test_results*. The value of the *test_results* field is a *test_results* object.
 
 The test_results object is a JSON object where the name of each field is the name of a glyph that was tested. The glyph names are in *glyphSpec* format - e.g. "/l.ss01". The value of the field is a *glyph test_results* object.
 
 ## Glyph test_results Object
+* **glyph_id**: the glyph ID of the glyph
 * **contour_count** : the number of coutours in the glyph
 * **width_method** : the width method used to test the glyph
 * **main_contour** : the method used to select the main contour of the glyph
