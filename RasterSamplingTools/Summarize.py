@@ -56,12 +56,11 @@ def main():
 
     for entry in outdb._db:
         psName = entry["ps_name"]
-        fullName = entry["full_name"]
         testResults = entry["test_results"]
         widths = {wf: [] for wf in widthFields}
         haveWidths = False
 
-        outFile.write(f"ps_name: {psName}, full_name: {fullName}, ")
+        outFile.write(f"{psName}\t")
 
         for result in testResults.values():
             widthResults = result.get("widths", None)
@@ -72,8 +71,8 @@ def main():
                     widths[widthField].append(widthResults[widthField])
 
         if haveWidths:
-            medians = [f"{wf}: {round(statistics.median(widths[wf]), 2)}" for wf in widthFields]
-            outFile.write(f"{', '.join(medians)}\n")
+            means = [f"{round(statistics.mean(widths[wf]), 2)}" for wf in widthFields]
+            outFile.write(f"{', '.join(means)}\n")
         else:
             outFile.write("no widths\n")
 
