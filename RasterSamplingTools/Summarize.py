@@ -71,10 +71,10 @@ def main():
                     widths[widthField].append(widthResults[widthField])
 
         if haveWidths:
-            means = [f"{round(statistics.mean(widths[wf]), 2)}" for wf in widthFields]
+            means = [f"{round(statistics.mean(widths[wf]), 1)}" for wf in widthFields]
             outFile.write(f"{', '.join(means)}\n")
         else:
-            outFile.write("no widths\n")
+            outFile.write("-999\n")
 
     if args.outputFile:
         outFile.close()

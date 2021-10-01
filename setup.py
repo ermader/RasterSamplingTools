@@ -5,7 +5,7 @@ with open("README.md", "r") as file:
 
 setup(
     name="RasterSamplingTools",
-    version="1.0.2",
+    version="1.0.3",
     packages=find_packages(),
     package_data={
         "": ["FontDatabase.json"],
