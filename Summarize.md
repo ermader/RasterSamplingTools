@@ -1,9 +1,9 @@
 # Summarize
 This tool reads a `FontDatabase.json` file written by `RasterSamplingTool` and prints a simmary line for each font.
-The summary line shows the font's postscript name, its full name and the median values of the selected stroke widths.
+The summary line shows the font's postscript name and the mean values of the selected stroke widths.
 
 ### Example summary line
-    ps_name: AcademyEngraved, full_name: Academy Engraved, median: 106.5
+    AcademyEngraved	106.5
 
 See [RasterSamplingTool](RasterSamplingTool.md) and [OutputDatabase](OutputDatabase.md) for details.
 
