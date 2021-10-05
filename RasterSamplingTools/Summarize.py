@@ -28,6 +28,7 @@ class SummarizeArgs(CommandLineArgs):
         CommandLineOption("input", None, lambda a: a.nextExtra("input file"), "inputFile", None),
         CommandLineOption("output", None, lambda a: a.nextExtra("output file"), "outputFile", None, required=False),
         CommandLineOption("widthFields", lambda s, a: CommandLineOption.valueFromDict(s.widthFieldDict, a, "width fields spec"), lambda a: a.nextExtra("width fields"), "widthFields", "median", required=False),
+        CommandLineOption("csv", None, True, "csv", False, required=False),
     ]
 
     def __init__(self):
@@ -54,13 +55,21 @@ def main():
     outFile = open(args.outputFile, "w") if args.outputFile else stdout
     widthFields = args.widthFields
 
+    if args.csv:
+        fieldNames = ",".join(widthFields)
+        outFile.write(f"ps_name,{fieldNames}")
+        if len(fieldNames) > 1:
+            outFile.write(",range,range as % of median")
+        outFile.write("\n")
+
     for entry in outdb._db:
         psName = entry["ps_name"]
         testResults = entry["test_results"]
         widths = {wf: [] for wf in widthFields}
         haveWidths = False
 
-        outFile.write(f"{psName}\t")
+        outFile.write(f"{psName}")
+        outFile.write("," if args.csv else "\t")
 
         for result in testResults.values():
             widthResults = result.get("widths", None)
@@ -72,7 +81,15 @@ def main():
 
         if haveWidths:
             means = [f"{round(statistics.mean(widths[wf]), 1)}" for wf in widthFields]
-            outFile.write(f"{', '.join(means)}\n")
+            outFile.write(f"{', '.join(means)}")
+            if args.csv:
+                min = float(means[0])
+                max = float(means[-1])
+                range = max - min
+                median = float(means[2])
+                percent = round(range / median, 4)
+                outFile.write(f",{round(range, 1)},{round(percent * 100.0, 1)}%")
+            outFile.write("\n")
         else:
             outFile.write("-999\n")
 
