@@ -55,7 +55,15 @@ def percentFormula(row, medianColumn, rangeColumn):
     rangeCell = cellName(row, rangeColumn)
 
     # return f"=IF({medianCell}<>0,{rangeCell}/{medianCell},#N/A)"
-    return f"=IF({medianCell}<>0,{rangeCell}/{medianCell},{-9999.9 / 100.0})"
+    # return f"=IF({medianCell}<>0,{rangeCell}/{medianCell},{-9999.9 / 100.0})"
+    return f"=IF({medianCell}<>0,{rangeCell}/{medianCell},\"\")"
+
+def statCells(ws, row, column, values, decimals=1):
+    numberFormat = f"0.{'0' * decimals}"
+    for i, v in enumerate(values):
+        ws.cell(row=row, column=column + i, value=v).number_format = numberFormat
+    ws.cell(row=row, column=column + 4, value=rangeFormula(row, column, column + 3)).number_format = numberFormat
+    ws.cell(row=row, column=column + 5, value=percentFormula(row, column + 1, column + 4)).number_format = "0.0%"
 
 
 def main():
@@ -118,39 +126,28 @@ def main():
                     fits[fitResultField].append(fitResults[fitResultField])
 
         if haveWidths:
-            means = [round(statistics.mean(widths[wf]), 1) for wf in widthFields]
+            means = [statistics.mean(widths[wf]) for wf in widthFields]
 
-            fitMeans = {frf: statistics.mean(fits[frf]) for frf in fitResultFields}
-            fitMedians = {frf: statistics.median(fits[frf]) for frf in fitResultFields}
-            fitMins = {frf: min(fits[frf]) for frf in fitResultFields}
-            fitMaxs = {frf: max(fits[frf]) for frf in fitResultFields}
+            angleFits = fits["stroke_angle"]
+            angleMeans = [min(angleFits), statistics.median(angleFits), statistics.mean(angleFits), max(angleFits)]
 
-            widthColumn = 4
+            r2Fits = fits["r_squared"]
+            r2Means = [min(r2Fits), statistics.median(r2Fits), statistics.mean(r2Fits), max(r2Fits)]
+
             row.extend([goodGlyphCount, len(testResults) - goodGlyphCount])
-            row.extend(means)
+
             ws.append(row)
-            ws.cell(row=rowNumber, column=widthColumn+4, value=rangeFormula(rowNumber, widthColumn, widthColumn+3))
-            ws.cell(row=rowNumber, column=widthColumn+5, value=percentFormula(rowNumber, widthColumn+1, widthColumn+4)).number_format = "0.0%"
 
-            angleColumn = widthColumn+6
-            ws.cell(row=rowNumber, column=angleColumn, value=fitMins["stroke_angle"]).number_format = "0.0"
-            ws.cell(row=rowNumber, column=angleColumn+1, value=fitMedians["stroke_angle"]).number_format = "0.0"
-            ws.cell(row=rowNumber, column=angleColumn+2, value=fitMeans["stroke_angle"]).number_format = "0.0"
-            ws.cell(row=rowNumber, column=angleColumn+3, value=fitMaxs["stroke_angle"]).number_format = "0.0"
-            ws.cell(row=rowNumber, column=angleColumn+4, value=rangeFormula(rowNumber, angleColumn, angleColumn+3)).number_format = "0.0"
-            ws.cell(row=rowNumber, column=angleColumn+5, value=percentFormula(rowNumber, angleColumn+1, angleColumn+4)).number_format = "0.0%"
+            column = len(row) + 1
+            statCells(ws, rowNumber, column, means)
 
-            r2Column = angleColumn + 6
-            ws.cell(row=rowNumber, column=r2Column, value=fitMins["r_squared"]).number_format = "0.0000"
-            ws.cell(row=rowNumber, column=r2Column+1, value=fitMedians["r_squared"]).number_format = "0.0000"
-            ws.cell(row=rowNumber, column=r2Column+2, value=fitMeans["r_squared"]).number_format = "0.0000"
-            ws.cell(row=rowNumber, column=r2Column+3, value=fitMaxs["r_squared"]).number_format = "0.0000"
-            ws.cell(row=rowNumber, column=r2Column+4, value=rangeFormula(rowNumber, r2Column, r2Column+3)).number_format = "0.0000"
-            ws.cell(row=rowNumber, column=r2Column+5, value=percentFormula(rowNumber, r2Column+1, r2Column+4)).number_format = "0.0%"
+            column += 6
+            statCells(ws, rowNumber, column, angleMeans)
+
+            column += 6
+            statCells(ws, rowNumber, column, r2Means, decimals=4)
+
         else:
-            # ws.cell(row=rowNumber, column=1, value=psName)
-            # ws.cell(row=rowNumber, column=2, value=-999.9)
-            # ws.append([psName, goodGlyphCount, len(testResults) - goodGlyphCount, -9999.9])
             ws.append([psName, goodGlyphCount, len(testResults) - goodGlyphCount])
 
         rowNumber += 1
