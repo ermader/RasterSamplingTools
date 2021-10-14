@@ -441,10 +441,7 @@ class RasterSamplingTest(object):
         if charCode:
             unicodeName = CharNames.getCharName(charCode)
 
-            if not unicodeName:
-                unicodeName = "(no Unicode name)"
-
-            charInfo = f"U+{charCode:04X} {unicodeName}"
+            charInfo = f"U+{charCode:04X} {unicodeName if unicodeName else '(no Unicode name)'}"
         else:
             charInfo = f"{gidSpec} {glyphName}"
 
@@ -483,7 +480,15 @@ class RasterSamplingTest(object):
             print(f"{indent}(this glyph has {contourCount} contours, so results may not be useful)")
 
         if args.outdb:
-            glyphResults = {"glyph_id": args.glyphSpec.glyphIDForFont(font), "contour_count": contourCount, "width_method": args.widthMethodName, "main_contour": args.mainContourTypeName, "direction": args.directionName}
+            glyphName = args.glyphSpec.nameForFont(font)
+            codePoints = font.codePointsForGlyphName(glyphName)
+
+            segmentCounts = []
+            for contour in outline.contours:
+                segmentCounts.append(len(contour.beziers))
+
+            glyphResults = {"code_points": codePoints, "unicode_character_name": unicodeName if unicodeName else "", "glyph_id": args.glyphSpec.glyphIDForFont(font), "contour_count": contourCount, "segment_counts": segmentCounts, "width_method": args.widthMethodName, "main_contour": args.mainContourTypeName, "direction": args.directionName}
+
 
         outlineBounds = outline.boundsRectangle
         outlineBoundsLeft = outlineBounds.left if outlineBounds.left >= 0 else 0

@@ -13,13 +13,14 @@ from openpyxl import Workbook
 from openpyxl.styles import Alignment
 from openpyxl.utils import get_column_letter
 from TestArguments.CommandLineArguments import CommandLineOption, CommandLineArgs
+from UnicodeData.CharProps import getScript, scriptCodes
 from RasterSamplingTools.OutputDatabase import OutputDatabase
 
 # from TextUtilities import ctFont, stringWidth
 
 _usage = """
 Usage:
-summarize --input inputPath [--output outputPath] [--widthFields mean | median | all]
+summarize --input inputPath --output outputPath
 """
 
 class SummarizeArgs(CommandLineArgs):
@@ -32,7 +33,7 @@ class SummarizeArgs(CommandLineArgs):
 
     options = [
         CommandLineOption("input", None, lambda a: a.nextExtra("input file"), "inputFile", None),
-        CommandLineOption("output", None, lambda a: a.nextExtra("output file"), "outputFile", None, required=False),
+        CommandLineOption("output", None, lambda a: a.nextExtra("output file"), "outputFile", None),
         # CommandLineOption("widthFields", lambda s, a: CommandLineOption.valueFromDict(s.widthFieldDict, a, "width fields spec"), lambda a: a.nextExtra("width fields"), "widthFields", "median", required=False),
         # CommandLineOption("excel", None, True, "excel", False, required=False),
     ]
@@ -65,6 +66,8 @@ def statCells(ws, row, column, values, decimals=1):
     ws.cell(row=row, column=column + 4, value=rangeFormula(row, column, column + 3)).number_format = numberFormat
     ws.cell(row=row, column=column + 5, value=percentFormula(row, column + 1, column + 4)).number_format = "0.0%"
 
+def getScriptCode(codePoint):
+    return scriptCodes[getScript(codePoint)]
 
 def main():
     argumentList = argv
@@ -91,7 +94,7 @@ def main():
 
     wb = Workbook()
     ws = wb.active
-    fieldNames = ["ps_name", "tested glyphs", "ignored glyphs"]
+    fieldNames = ["ps_name", "tested glyphs", "ignored glyphs", "scripts"]
     fieldNames.extend(widthFields)
     fieldNames.extend(["range", "range as % of median", "min angle", "median angle", "mean angle", "max angle", "angle range", "range as % of median", "min R\u00B2", "median R\u00B2", "mean R\u00B2", "max R\u00B2", "R\u00B2 range", "range as % of median"])
 
@@ -111,10 +114,15 @@ def main():
         # maxWidth = max(maxWidth, stringWidth(psName, font))
 
         row = [psName]
+        scripts = set()
 
         for result in testResults.values():
             widthResults = result.get("widths", None)
             fitResults = result.get("fit_results", None)
+            codePoints = result.get("code_points", None)
+
+            for codePoint in codePoints:
+                scripts.add(getScriptCode(codePoint))
 
             if widthResults:
                 haveWidths = True
@@ -134,7 +142,8 @@ def main():
             r2Fits = fits["r_squared"]
             r2Means = [min(r2Fits), statistics.median(r2Fits), statistics.mean(r2Fits), max(r2Fits)]
 
-            row.extend([goodGlyphCount, len(testResults) - goodGlyphCount])
+            scripts.discard("Zzzz")  # Don't count the unknown script
+            row.extend([goodGlyphCount, len(testResults) - goodGlyphCount, len(scripts)])
 
             ws.append(row)
 

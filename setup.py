@@ -5,7 +5,7 @@ with open("README.md", "r") as file:
 
 setup(
     name="RasterSamplingTools",
-    version="1.0.3",
+    version="1.0.4",
     packages=find_packages(),
     package_data={
         "": ["FontDatabase.json"],
@@ -18,6 +18,7 @@ setup(
         "TestArguments >= 0.2",
         "numpy >= 1.21.2",
         "matplotlib >= 3.4.3",
+        "openpyxl >= 3.0.9",
         "scipy >= 1.7.1",
         "statsmodels >= 0.12.2",
     ],
