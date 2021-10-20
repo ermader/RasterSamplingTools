@@ -45,6 +45,7 @@ Options:
 [--outdb databaseFilePath]
 [--loopDetection]
 [--colon]
+[--autoRangeOff]
 [--debug]
 """
 
@@ -78,9 +79,10 @@ class RasterSamplingTestArgs(TestArgs):
         CommandLineOption("range", lambda s, a: s.processRange(a), lambda a: a.nextExtra("range"), "range", "30-70", required=False),
         CommandLineOption("mainContour", lambda s, a:CommandLineOption.valueFromDict(s.mainContourTypes, a, "main contour type"), lambda a: a.nextExtra("main contour type"), "mainContourType", "tallest", required=False),
         CommandLineOption("direction", lambda s, a: CommandLineOption.valueFromDict(s.directions, a, "direction"), lambda a: a.nextExtra("direction"), "directionAdjust", "ltr", required=False),
-        CommandLineOption("outdb", lambda s, a: OutputDatabase(a), lambda a: a.nextExtra("output db"), "outdb", "None", required=False),
+        CommandLineOption("outdb", lambda s, a: OutputDatabase(a) if a else None, lambda a: a.nextExtra("output db"), "outdb", None, required=False),
         CommandLineOption("loopDetection", None, True, "loopDetection", False, required=False),
         CommandLineOption("colon", None, True, "colon", False, required=False),
+        CommandLineOption("autoRangeOff", None, True, "autoRangeOff", False, required=False),
     ]
 
     def __init__(self):
@@ -289,23 +291,25 @@ class RasterSamplingTest(object):
 
         return start, end
 
-    @classmethod
-    def autoRange(cls, rasters, outline):
-        w = [round(cls.rasterLength(r), 2) for r in rasters]
+    def autoRange(self, rasters, outline):
+        w = [round(self.rasterLength(r), 2) for r in rasters]
         w1 = diff(w)
         w2 = diff(w1)
 
         currentRange = [-1, -1]
         bestRange = [-1, -1]
-        for i, v in enumerate(w2):
-            if abs(v) < 5.0:
-                if currentRange[0] >= 0:
-                    currentRange[1] = i
+
+        if not self._args.autoRangeOff:
+            for i, v in enumerate(w2):
+                if abs(v) < 5.0:
+                    if currentRange[0] >= 0:
+                        currentRange[1] = i
+                    else:
+                        currentRange[0] = i
                 else:
-                    currentRange[0] = i
-            else:
-                bestRange = longestRange(bestRange, currentRange)
-                currentRange = [-1, -1]
+                    bestRange = longestRange(bestRange, currentRange)
+                    currentRange = [-1, -1]
+
         bestRange = longestRange(bestRange, currentRange)
         return w, w1, w2, bestRange
 

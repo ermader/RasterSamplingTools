@@ -62,12 +62,8 @@ def main():
         testArgs.fontName = None
         testArgs.fontNumber = 0
         testArgs.debug = False
-        # testArgs.glyphName = toolArgs.glyphName
-        # testArgs.glyphID = toolArgs.glyphID
-        # testArgs.charCode = toolArgs.charCode
         reldir = os.path.dirname(os.path.relpath(path, os.path.dirname(toolArgs.inputDir)))
         testArgs.outdir = os.path.join(toolArgs.outputDir, reldir)
-        # testArgs.widthMethod = RasterSamplingTest.RasterSamplingTestArgs.widthMethodLeastspread
         testArgs.outdb = outdb
         testArgs.silent = True
         os.makedirs(testArgs.outdir, exist_ok=True)
