@@ -23,6 +23,7 @@ import statsmodels.api
 from UnicodeData.CharNames import CharNames
 from TestArguments.Font import Font
 from PathLib.Bezier import Bezier, BOutline
+from PathLib.BezierUtilities import lli
 from PathLib import PathUtilities
 from PathLib.Transform import Transform
 from PathLib.SegmentPen import SegmentPen
@@ -309,16 +310,16 @@ class RasterSamplingTest(object):
         return w, w1, w2, bestRange
 
     @classmethod
-    def bestFit(cls, rasters, outline):
-        midpoints = [r.midpoint for r in rasters]
+    def midpoints(cls, rasters):
+        return [r.midpoint for r in rasters]
 
-        # linregress(midpoints) can generate warnings if the best fit line is
-        # vertical. So we swap x, y and do the best fit that way.
-        # (which of course, will generate warnings if the best fit line is horizontal)
+    @classmethod
+    def bestFit(cls, midpoints, outline):
+
         xs, ys = outline.unzipPoints(midpoints)
-        b, a, rValue, pValue, stdErr = scipy.stats.linregress(ys, xs)
+        b, a, rValue, pValue, stdErr = scipy.stats.linregress(xs, ys)
 
-        return midpoints, b, a, rValue, pValue, stdErr
+        return b, a, rValue, pValue, stdErr
 
     @classmethod
     def direction(cls, curve):
@@ -605,15 +606,15 @@ class RasterSamplingTest(object):
                 else:
                     missedRight = True
 
-            # if missedLeft or missedRight:
-            #     missedRasterCount += 1
-            #     continue
-
-            # cp.drawPaths([outline.pathFromSegments(raster)], color=PathUtilities.PUColor.fromName("red"))
-
         innerBounds = None
         if args.loopDetection and len(innerContours) == 1 and innerContours[0].boundsRectangle.top >= outlineBounds.top * .70:
             innerBounds = innerContours[0].boundsRectangle
+
+        topLeft = (outlineBounds.left, outlineBounds.top)
+        topRight = (outlineBounds.right, outlineBounds.top)
+        bottomLeft = (outlineBounds.left, outlineBounds.bottom)
+        bottomRight = (outlineBounds.right, outlineBounds.bottom)
+        aboutPoint = bottomLeft
 
         if doLeft:
             wl, wl1, wl2, rl = self.autoRange(rastersLeft, outline)
@@ -638,18 +639,23 @@ class RasterSamplingTest(object):
             widthsR = wr[start:limit]
 
         if doLeft and doRight:
-            midpointsL, bL, aL, rValueL, pValueL, stdErrL = self.bestFit(rastersLeft, outline)
-            midpointsR, bR, aR, rValueR, pValueR, stdErrR = self.bestFit(rastersRight, outline)
+            midpointsL = self.midpoints(rastersLeft)
+            rotatedMidpointsL = PathUtilities.rotateSegmentAbout(midpointsL, aboutPoint, degrees=45, ccw=False)
+            bL, aL, rValueL, pValueL, stdErrL = self.bestFit(rotatedMidpointsL, outline)
+
+            midpointsR = self.midpoints(rastersRight)
+            rotatedMidpointsR = PathUtilities.rotateSegmentAbout(midpointsR, aboutPoint, degrees=45, ccw=False)
+            bR, aR, rValueR, pValueR, stdErrR = self.bestFit(rotatedMidpointsR, outline)
 
             if round(stdErrL, 2) <= round(stdErrR, 2):
                 rasters = rastersLeft
                 chosenWidthMethod = "Left"
-                widths, midpoints, b, a, rValue, pValue, stdErr = widthsL, midpointsL, bL, aL, rValueL, pValueL, stdErrL
+                widths, midpoints, rotatedMidpoints, b, a, rValue, pValue, stdErr = widthsL, midpointsL, rotatedMidpointsL, bL, aL, rValueL, pValueL, stdErrL
                 w, w1, w2, bestRange = wl, wl1, wl2, rl
             else:
                 rasters = rastersRight
                 chosenWidthMethod = "Right"
-                widths, midpoints, b, a, rValue, pValue, stdErr = widthsR, midpointsR, bR, aR, rValueR, pValueR, stdErrR
+                widths, midpoints, rotatedMidpoints, b, a, rValue, pValue, stdErr = widthsR, midpointsR, rotatedMidpointsR, bR, aR, rValueR, pValueR, stdErrR
                 w, w1, w2, bestRange = wr, wr1, wr2, rr
         else:
             if doLeft:
@@ -661,21 +667,34 @@ class RasterSamplingTest(object):
                 chosenWidthMethod = "Right"
                 widths, w, w1, w2, bestRange = widthsR, wr, wr1, wr2, rr
 
-            midpoints, b, a, rValue, pValue, stdErr = self.bestFit(rasters, outline)
+            midpoints = self.midpoints(rasters)
+            rotatedMidpoints = PathUtilities.rotateSegmentAbout(midpoints, aboutPoint, degrees=45, ccw=False)
+            b, a, rValue, pValue, stdErr = self.bestFit(rotatedMidpoints, outline)
 
         r2 = rValue * rValue
-        my0 = outlineBounds.bottom
-        myn = outlineBounds.top
+        _, my0 = rotatedMidpoints[0]
+        _, myn = rotatedMidpoints[-1]
 
-        # x = by + a
-        mx0 = my0 * b + a
-        mxn = myn * b + a
+        # bx + a = y
+        # bx = y - a
+        # x = (y - a) / b
+        mx0 = (my0 - a) / b
+        mxn = (myn - a) / b
+
+        fittedLine = [(mx0, my0), (mxn, myn)]
+
+        lines = [[topLeft, topRight], [bottomLeft, bottomRight]]
+        rotatedLines = PathUtilities.rotateContourAbout(lines, bottomLeft, degrees=45, ccw=False)
+
+        topPoint = lli(fittedLine, rotatedLines[0])
+        bottomPoint = lli(fittedLine, rotatedLines[1])
+
+        greenLine = PathUtilities.rotateSegmentAbout([bottomPoint, topPoint], aboutPoint, degrees=45, ccw=True)
+        mx0, my0 = greenLine[0]
+        mxn, myn = greenLine[1]
 
         if missedRasterCount > 0:
             print(f"{indent}{missedRasterCount} rasters did not intersect the glyph.")
-
-        # if rValue == 0:
-        #     print(f"{indent}rValue == {rValue}, pValue == {pValue}!")
 
         print(f"{indent}{chosenWidthMethod}: a = {round(a, 2)}, b = {round(b, 4)}, R\u00B2 = {round(r2, 4)}")
 
