@@ -36,5 +36,6 @@ The tool is invoked on the command line as `rastersamplingtest` with the options
 * **\-\-direction *dir*** - specifies if the glyph is left to right (*dir* is *ltr*) or right to left (*dir is *rtl*) The default is *ltr*. Used to determine the sign of the stroke angle.
 * **\-\-outdb *path*** - specifies the path to the output database file. If not present, the output database file is not updated.
 * **\-\-loopDetection** - if present, the tool will try to detect an inner loop in the glyph and use that to set the raster range.
+* **\-\-autoRangeOff** - If present, disable automatic range detection
 * **\-\-colon** - if present, calculate the italic angle based on the colon glyph in the font. (if that glyph is present)
 * **\-\-debug** - enables debug output.

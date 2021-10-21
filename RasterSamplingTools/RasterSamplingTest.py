@@ -44,8 +44,8 @@ Options:
 [--direction (ltr | rtl)] (default: ltr)
 [--outdb databaseFilePath]
 [--loopDetection]
-[--colon]
 [--autoRangeOff]
+[--colon]
 [--debug]
 """
 
