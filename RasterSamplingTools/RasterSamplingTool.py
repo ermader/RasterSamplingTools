@@ -66,6 +66,7 @@ def main():
         testArgs.outdir = os.path.join(toolArgs.outputDir, reldir)
         testArgs.outdb = outdb
         testArgs.silent = True
+        testArgs.autoRangeOff = False
         os.makedirs(testArgs.outdir, exist_ok=True)
 
         print(f"{os.path.relpath(path, toolArgs.inputDir)}:")
