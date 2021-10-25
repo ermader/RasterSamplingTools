@@ -19,6 +19,7 @@ import matplotlib.patches as mpatches
 import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
 import scipy.stats
+from scipy import odr
 import statsmodels.api
 from UnicodeData.CharNames import CharNames
 from TestArguments.Font import Font
@@ -321,8 +322,16 @@ class RasterSamplingTest(object):
     def bestFit(cls, midpoints, outline):
 
         xs, ys = outline.unzipPoints(midpoints)
-        b, a, rValue, pValue, stdErr = scipy.stats.linregress(xs, ys)
+        # b, a, rValue, pValue, stdErr = scipy.stats.linregress(xs, ys)
+        data = odr.Data(xs, ys)
+        ord_obj = odr.ODR(data, odr.unilinear)
+        output = ord_obj.run()
 
+        b = output.beta[0]
+        a = output.beta[1]
+        rValue = output.res_var
+        pValue = 1.0
+        stdErr = output.rel_error
         return b, a, rValue, pValue, stdErr
 
     @classmethod
@@ -614,6 +623,7 @@ class RasterSamplingTest(object):
         if args.loopDetection and len(innerContours) == 1 and innerContours[0].boundsRectangle.top >= outlineBounds.top * .70:
             innerBounds = innerContours[0].boundsRectangle
 
+        fitAngle = 45
         topLeft = (outlineBounds.left, outlineBounds.top)
         topRight = (outlineBounds.right, outlineBounds.top)
         bottomLeft = (outlineBounds.left, outlineBounds.bottom)
@@ -644,11 +654,11 @@ class RasterSamplingTest(object):
 
         if doLeft and doRight:
             midpointsL = self.midpoints(rastersLeft)
-            rotatedMidpointsL = PathUtilities.rotateSegmentAbout(midpointsL, aboutPoint, degrees=45, ccw=False)
+            rotatedMidpointsL = PathUtilities.rotateSegmentAbout(midpointsL, aboutPoint, degrees=fitAngle, ccw=False)
             bL, aL, rValueL, pValueL, stdErrL = self.bestFit(rotatedMidpointsL, outline)
 
             midpointsR = self.midpoints(rastersRight)
-            rotatedMidpointsR = PathUtilities.rotateSegmentAbout(midpointsR, aboutPoint, degrees=45, ccw=False)
+            rotatedMidpointsR = PathUtilities.rotateSegmentAbout(midpointsR, aboutPoint, degrees=fitAngle, ccw=False)
             bR, aR, rValueR, pValueR, stdErrR = self.bestFit(rotatedMidpointsR, outline)
 
             if round(stdErrL, 2) <= round(stdErrR, 2):
@@ -672,7 +682,7 @@ class RasterSamplingTest(object):
                 widths, w, w1, w2, bestRange = widthsR, wr, wr1, wr2, rr
 
             midpoints = self.midpoints(rasters)
-            rotatedMidpoints = PathUtilities.rotateSegmentAbout(midpoints, aboutPoint, degrees=45, ccw=False)
+            rotatedMidpoints = PathUtilities.rotateSegmentAbout(midpoints, aboutPoint, degrees=fitAngle, ccw=False)
             b, a, rValue, pValue, stdErr = self.bestFit(rotatedMidpoints, outline)
 
         r2 = rValue * rValue
@@ -688,12 +698,12 @@ class RasterSamplingTest(object):
         fittedLine = [(mx0, my0), (mxn, myn)]
 
         lines = [[topLeft, topRight], [bottomLeft, bottomRight]]
-        rotatedLines = PathUtilities.rotateContourAbout(lines, bottomLeft, degrees=45, ccw=False)
+        rotatedLines = PathUtilities.rotateContourAbout(lines, bottomLeft, degrees=fitAngle, ccw=False)
 
         topPoint = lli(fittedLine, rotatedLines[0])
         bottomPoint = lli(fittedLine, rotatedLines[1])
 
-        greenLine = PathUtilities.rotateSegmentAbout([bottomPoint, topPoint], aboutPoint, degrees=45, ccw=True)
+        greenLine = PathUtilities.rotateSegmentAbout([bottomPoint, topPoint], aboutPoint, degrees=fitAngle, ccw=True)
         mx0, my0 = greenLine[0]
         mxn, myn = greenLine[1]
 
