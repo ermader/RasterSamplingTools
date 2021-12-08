@@ -21,8 +21,10 @@ The test_results object is a JSON object where the name of each field is the nam
 ## fit_results Object
 * **slope** : the slope of the line fitted through the midpoints of the midpoints of the lines where the rasters intersect the selected stroke
 * **intercept** : the coordinate where the fitted line intersects the axis
-* **r_squared** : the square of the r-value of the fitted line
+* **r_value** : the r-value of the fitted line
+* **p_value** : the p-value of the fitted line
 * **std_err** : the standard error of the fit
+* **log_mean_orthogonal_distance** : the log of the mean orthorgonal distance of the points to the fitted line
 * **stroke_angle** : the computed angle of the stroke, in degrees
 
 ## widths Object

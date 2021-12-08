@@ -58,7 +58,7 @@ def keyForValue(dict, value):
         if v == value: return k
     return None
 
-# distance from the point p to the line defined by y = mx + k
+# distance from the point p to the line defined by x = my + k
 def distanceFromPointToLine(p, k, m):
     return abs(k + m * p[1] - p[0]) / math.sqrt(1 + m * m)
 
