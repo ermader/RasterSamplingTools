@@ -58,6 +58,10 @@ def keyForValue(dict, value):
         if v == value: return k
     return None
 
+# distance from the point p to the line defined by y = mx + k
+def distanceFromPointToLine(p, k, m):
+    return abs(k + m * p[1] - p[0]) / math.sqrt(1 + m * m)
+
 class RasterSamplingTestArgs(TestArgs):
     # __slots__ = "typoBounds", "glyphBounds", "widthMethod", "mainContourType", "loopDetection", "directionAdjust", "outdir", "outdb", "silent", "colon", "showFullName"
 
@@ -320,18 +324,12 @@ class RasterSamplingTest(object):
 
     @classmethod
     def bestFit(cls, midpoints, outline):
-
+        # linregress(midpoints) can generate warnings if the best fit line is
+        # vertical. So we swap x, y and do the best fit that way.
+        # (which of course, will generate warnings if the best fit line is horizontal)
         xs, ys = outline.unzipPoints(midpoints)
-        # b, a, rValue, pValue, stdErr = scipy.stats.linregress(xs, ys)
-        data = odr.Data(xs, ys)
-        ord_obj = odr.ODR(data, odr.unilinear)
-        output = ord_obj.run()
+        b, a, rValue, pValue, stdErr = scipy.stats.linregress(ys, xs)
 
-        b = output.beta[0]
-        a = output.beta[1]
-        rValue = output.res_var
-        pValue = 1.0
-        stdErr = output.rel_error
         return b, a, rValue, pValue, stdErr
 
     @classmethod
@@ -623,7 +621,6 @@ class RasterSamplingTest(object):
         if args.loopDetection and len(innerContours) == 1 and innerContours[0].boundsRectangle.top >= outlineBounds.top * .70:
             innerBounds = innerContours[0].boundsRectangle
 
-        fitAngle = 45
         topLeft = (outlineBounds.left, outlineBounds.top)
         topRight = (outlineBounds.right, outlineBounds.top)
         bottomLeft = (outlineBounds.left, outlineBounds.bottom)
@@ -654,22 +651,20 @@ class RasterSamplingTest(object):
 
         if doLeft and doRight:
             midpointsL = self.midpoints(rastersLeft)
-            rotatedMidpointsL = PathUtilities.rotateSegmentAbout(midpointsL, aboutPoint, degrees=fitAngle, ccw=False)
-            bL, aL, rValueL, pValueL, stdErrL = self.bestFit(rotatedMidpointsL, outline)
+            bL, aL, rValueL, pValueL, stdErrL = self.bestFit(midpointsL, outline)
 
             midpointsR = self.midpoints(rastersRight)
-            rotatedMidpointsR = PathUtilities.rotateSegmentAbout(midpointsR, aboutPoint, degrees=fitAngle, ccw=False)
-            bR, aR, rValueR, pValueR, stdErrR = self.bestFit(rotatedMidpointsR, outline)
+            bR, aR, rValueR, pValueR, stdErrR = self.bestFit(midpointsR, outline)
 
             if round(stdErrL, 2) <= round(stdErrR, 2):
                 rasters = rastersLeft
                 chosenWidthMethod = "Left"
-                widths, midpoints, rotatedMidpoints, b, a, rValue, pValue, stdErr = widthsL, midpointsL, rotatedMidpointsL, bL, aL, rValueL, pValueL, stdErrL
+                widths, midpoints, b, a, rValue, pValue, stdErr = widthsL, midpointsL, bL, aL, rValueL, pValueL, stdErrL
                 w, w1, w2, bestRange = wl, wl1, wl2, rl
             else:
                 rasters = rastersRight
                 chosenWidthMethod = "Right"
-                widths, midpoints, rotatedMidpoints, b, a, rValue, pValue, stdErr = widthsR, midpointsR, rotatedMidpointsR, bR, aR, rValueR, pValueR, stdErrR
+                widths, midpoints, b, a, rValue, pValue, stdErr = widthsR, midpointsR, bR, aR, rValueR, pValueR, stdErrR
                 w, w1, w2, bestRange = wr, wr1, wr2, rr
         else:
             if doLeft:
@@ -682,42 +677,30 @@ class RasterSamplingTest(object):
                 widths, w, w1, w2, bestRange = widthsR, wr, wr1, wr2, rr
 
             midpoints = self.midpoints(rasters)
-            rotatedMidpoints = PathUtilities.rotateSegmentAbout(midpoints, aboutPoint, degrees=fitAngle, ccw=False)
-            b, a, rValue, pValue, stdErr = self.bestFit(rotatedMidpoints, outline)
+            b, a, rValue, pValue, stdErr = self.bestFit(midpoints, outline)
 
-        r2 = rValue * rValue
-        _, my0 = rotatedMidpoints[0]
-        _, myn = rotatedMidpoints[-1]
+        my0 = outlineBounds.bottom
+        myn = outlineBounds.top
 
-        # bx + a = y
-        # bx = y - a
-        # x = (y - a) / b
-        mx0 = (my0 - a) / b
-        mxn = (myn - a) / b
+        # x = by + a
+        mx0 = b * my0 + a
+        mxn = b * myn + a
 
-        fittedLine = [(mx0, my0), (mxn, myn)]
-
-        lines = [[topLeft, topRight], [bottomLeft, bottomRight]]
-        rotatedLines = PathUtilities.rotateContourAbout(lines, bottomLeft, degrees=fitAngle, ccw=False)
-
-        topPoint = lli(fittedLine, rotatedLines[0])
-        bottomPoint = lli(fittedLine, rotatedLines[1])
-
-        greenLine = PathUtilities.rotateSegmentAbout([bottomPoint, topPoint], aboutPoint, degrees=fitAngle, ccw=True)
-        mx0, my0 = greenLine[0]
-        mxn, myn = greenLine[1]
+        orthogonalDistances = [distanceFromPointToLine(p, a, b) for p in midpoints]
+        meanOrthogonalDistance = statistics.mean(orthogonalDistances)
+        lmod = math.log(meanOrthogonalDistance + 1)  # + 1 to keep log >= 0
 
         if missedRasterCount > 0:
             print(f"{indent}{missedRasterCount} rasters did not intersect the glyph.")
 
-        print(f"{indent}{chosenWidthMethod}: a = {round(a, 2)}, b = {round(b, 4)}, R\u00B2 = {round(r2, 4)}")
+        print(f"{indent}{chosenWidthMethod}: a = {round(a, 2)}, b = {round(b, 4)}, r_value = {round(rValue, 4)}, p_value = {round(pValue, 2)}, lmod = {round(lmod, 4)}")
 
         strokeAngle = round(math.degrees(math.atan2(mxn - mx0, myn - my0)), 1) * args.directionAdjust
 
         if args.outdb:
             glyphResults["chosen_width_method"] = chosenWidthMethod.lower()
             glyphResults["raster_sample_range"] = f"{bestRange[0] * 2}-{bestRange[1] * 2}"
-            glyphResults["fit_results"] = {"slope": round(b, 4), "intercept": round(a, 2), "r_squared": round(r2, 4), "std_err": round(stdErr, 4), "stroke_angle": strokeAngle}
+            glyphResults["fit_results"] = {"slope": round(b, 4), "intercept": round(a, 2), "r_value": round(rValue, 4), "p_value": round(pValue, 4), "std_err": round(stdErr, 4), "log_mean_orthogonal_distance": round(lmod, 4), "stroke_angle": strokeAngle}
 
         avgWidth = round(statistics.mean(widths), 2)
         quartiles = statistics.quantiles(widths, n=4, method="inclusive")
@@ -766,7 +749,7 @@ class RasterSamplingTest(object):
 
         ax1.plot([mx0, mxn], [my0, myn], "g-", linewidth=lineWidth, alpha=0.75)
 
-        ax1.set_title(f"Stroke angle = {strokeAngle}\u00B0\n{chosenWidthMethod} best fit R\u00B2 = {round(r2, 4)}")
+        ax1.set_title(f"Stroke angle = {strokeAngle}\u00B0\n{chosenWidthMethod} best fit lmod = {round(lmod, 4)}")
 
         m2 = median / 2
         ax1.plot([mx0 - m2, mxn - m2], [my0, myn], c="tab:orange", ls="-", linewidth=lineWidth, alpha=0.75)

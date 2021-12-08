@@ -2,5 +2,9 @@
 <project version="4">
   <component name="VcsDirectoryMappings">
     <mapping directory="$PROJECT_DIR$" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/FontDocTools" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/PathLib" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/TestArguments" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/UnicodeData" vcs="Git" />
   </component>
 </project>

@@ -16,8 +16,6 @@ from TestArguments.CommandLineArguments import CommandLineOption, CommandLineArg
 from UnicodeData.CharProps import getScript, scriptCodes
 from RasterSamplingTools.OutputDatabase import OutputDatabase
 
-# from TextUtilities import ctFont, stringWidth
-
 _usage = """
 Usage:
 summarize --input inputPath --output outputPath
@@ -34,8 +32,6 @@ class SummarizeArgs(CommandLineArgs):
     options = [
         CommandLineOption("input", None, lambda a: a.nextExtra("input file"), "inputFile", None),
         CommandLineOption("output", None, lambda a: a.nextExtra("output file"), "outputFile", None),
-        # CommandLineOption("widthFields", lambda s, a: CommandLineOption.valueFromDict(s.widthFieldDict, a, "width fields spec"), lambda a: a.nextExtra("width fields"), "widthFields", "median", required=False),
-        # CommandLineOption("excel", None, True, "excel", False, required=False),
     ]
 
     def __init__(self):
@@ -55,8 +51,6 @@ def percentFormula(row, medianColumn, rangeColumn):
     medianCell = cellName(row, medianColumn)
     rangeCell = cellName(row, rangeColumn)
 
-    # return f"=IF({medianCell}<>0,{rangeCell}/{medianCell},#N/A)"
-    # return f"=IF({medianCell}<>0,{rangeCell}/{medianCell},{-9999.9 / 100.0})"
     return f"=IF({medianCell}<>0,{rangeCell}/{medianCell},\"\")"
 
 def statCells(ws, row, column, values, decimals=1):
@@ -90,13 +84,13 @@ def main():
 
     outdb = OutputDatabase(args.inputFile)
     widthFields = args.widthFields
-    fitResultFields = ["stroke_angle", "r_squared"]
+    fitResultFields = ["stroke_angle", "log_mean_orthogonal_distance"]
 
     wb = Workbook()
     ws = wb.active
     fieldNames = ["ps_name", "tested glyphs", "ignored glyphs", "scripts"]
     fieldNames.extend(widthFields)
-    fieldNames.extend(["range", "range as % of median", "min angle", "median angle", "mean angle", "max angle", "angle range", "range as % of median", "min R\u00B2", "median R\u00B2", "mean R\u00B2", "max R\u00B2", "R\u00B2 range", "range as % of median"])
+    fieldNames.extend(["range", "range as % of median", "min angle", "median angle", "mean angle", "max angle", "angle range", "range as % of median", "min lmod", "median lmod", "mean lmod", "max lmod", "lmod range", "range as % of median"])
 
     for column, label in enumerate(fieldNames):
         ws.cell(row=1, column=column+1, value=label).alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
@@ -139,8 +133,8 @@ def main():
             angleFits = fits["stroke_angle"]
             angleMeans = [min(angleFits), statistics.median(angleFits), statistics.mean(angleFits), max(angleFits)]
 
-            r2Fits = fits["r_squared"]
-            r2Means = [min(r2Fits), statistics.median(r2Fits), statistics.mean(r2Fits), max(r2Fits)]
+            lmodFits = fits["log_mean_orthogonal_distance"]
+            lmodMeans = [min(lmodFits), statistics.median(lmodFits), statistics.mean(lmodFits), max(lmodFits)]
 
             scripts.discard("Zzzz")  # Don't count the unknown script
             row.extend([goodGlyphCount, len(testResults) - goodGlyphCount, len(scripts)])
@@ -154,7 +148,7 @@ def main():
             statCells(ws, rowNumber, column, angleMeans)
 
             column += 6
-            statCells(ws, rowNumber, column, r2Means, decimals=4)
+            statCells(ws, rowNumber, column, lmodMeans, decimals=4)
 
         else:
             ws.append([psName, goodGlyphCount, len(testResults) - goodGlyphCount])
