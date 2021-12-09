@@ -688,7 +688,7 @@ class RasterSamplingTest(object):
 
         orthogonalDistances = [distanceFromPointToLine(p, a, b) for p in midpoints]
         meanOrthogonalDistance = statistics.mean(orthogonalDistances)
-        lmod = math.log(meanOrthogonalDistance + 1)  # + 1 to keep log >= 0
+        lmod = math.log1p(meanOrthogonalDistance)
 
         if missedRasterCount > 0:
             print(f"{indent}{missedRasterCount} rasters did not intersect the glyph.")
