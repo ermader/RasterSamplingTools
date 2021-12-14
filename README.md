@@ -22,7 +22,8 @@ See [Summarize](Summarize.md) for details.
 
 The tools require Python 3.8 or later, and the [FontDocTools](https://bitbucket.org/LindenbergSW/FontDocTools), [UnicodeData](https://github.com/ermader/UnicodeData), [TestArguments](https://github.com/ermader/TestArguments) and [PathLib](https://github.com/ermader/PathLib) packages. The tools have been tested on macOS 11.5 but may also work on earlier versions of MacOS and other platforms.
 
-If you are running on a Mac with Apple Silicon, e.g. an M1 MacBook Pro, you'll need to follow the installation steps below under the heading "Installing on Apple Silicon."
+If you are running on a Mac with Apple Silicon, e.g. an M1 MacBook Pro, you'll need to follow the installation steps under the heading "Installing on Apple Silicon." Otherwise, follow the steps directly below.
+
 * Check whether your system has Python 3.8 or later installed:
 
         python3 --version
