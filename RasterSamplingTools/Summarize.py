@@ -6,14 +6,19 @@ Created on September 15, 2021
 @author Eric Mader
 """
 
+import typing
+
 import os
-from sys import argv, stderr, stdout
+from sys import argv, stderr  #, stdout
 import statistics
 from openpyxl import Workbook
+from openpyxl.worksheet import worksheet
+from openpyxl.cell import cell
 from openpyxl.styles import Alignment
 from openpyxl.utils import get_column_letter
-from TestArguments.CommandLineArguments import CommandLineOption, CommandLineArgs
-from UnicodeData.CharProps import getScript, scriptCodes
+from TestArguments.CommandLineArguments import CommandLineOption, CommandLineArgs, ArgumentIterator
+from UnicodeData.CharProps import getScript  #, scriptCodes
+from UnicodeData.UCDTypeDictionaries import scriptNames as scriptCodes
 from RasterSamplingTools.OutputDatabase import OutputDatabase
 
 _usage = """
@@ -29,6 +34,11 @@ class SummarizeArgs(CommandLineArgs):
         "all": ["min", "q1", "median", "mean", "q3", "max"],
     }
 
+    @staticmethod
+    def inFile(a: ArgumentIterator) -> str:
+        return a.nextExtra("input file")
+
+
     options = [
         CommandLineOption("input", None, lambda a: a.nextExtra("input file"), "inputFile", None),
         CommandLineOption("output", None, lambda a: a.nextExtra("output file"), "outputFile", None),
@@ -37,30 +47,38 @@ class SummarizeArgs(CommandLineArgs):
     def __init__(self):
         CommandLineArgs.__init__(self)
         self._options.extend(SummarizeArgs.options)
+        self.widthFields = self.widthFieldDict["most"]
+        self.inputFile = ""
+        self.outputFile = ""
 
-def cellName(row, column):
+def cellName(row: int, column: int) -> str:
     return f"{get_column_letter(column)}{row}"
 
-def rangeFormula(row, minColumn, maxColumn):
+def rangeFormula(row: int, minColumn: int, maxColumn: int) -> str:
     minCell = cellName(row, minColumn)
     maxCell = cellName(row, maxColumn)
 
     return f"={maxCell}-{minCell}"
 
-def percentFormula(row, medianColumn, rangeColumn):
+def percentFormula(row: int, medianColumn: int, rangeColumn: int) -> str:
     medianCell = cellName(row, medianColumn)
     rangeCell = cellName(row, rangeColumn)
 
     return f"=IF({medianCell}<>0,{rangeCell}/{medianCell},\"\")"
 
-def statCells(ws, row, column, values, decimals=1):
+def statCells(ws: worksheet.Worksheet, row: int, column: int, values: list[float], decimals: int = 1):
     numberFormat = f"0.{'0' * decimals}"
     for i, v in enumerate(values):
-        ws.cell(row=row, column=column + i, value=v).number_format = numberFormat
-    ws.cell(row=row, column=column + 4, value=rangeFormula(row, column, column + 3)).number_format = numberFormat
-    ws.cell(row=row, column=column + 5, value=percentFormula(row, column + 1, column + 4)).number_format = "0.0%"
+        vCell = typing.cast(cell.Cell, ws.cell(row=row, column=column + i, value=v))
+        vCell.number_format = numberFormat
+    
+    rangeCell = typing.cast(cell.Cell,  ws.cell(row=row, column=column + 4, value=rangeFormula(row, column, column + 3)))
+    rangeCell.number_format = numberFormat
 
-def getScriptCode(codePoint):
+    percentCell = typing.cast(cell.Cell,  ws.cell(row=row, column=column + 5, value=percentFormula(row, column + 1, column + 4)))
+    percentCell.number_format = "0.0%"
+
+def getScriptCode(codePoint: int) -> str:
     return scriptCodes[getScript(codePoint)]
 
 def main():
@@ -93,22 +111,23 @@ def main():
     fieldNames.extend(["range", "range as % of median", "min angle", "median angle", "mean angle", "max angle", "angle range", "range as % of median", "min lmod", "median lmod", "mean lmod", "max lmod", "lmod range", "range as % of median"])
 
     for column, label in enumerate(fieldNames):
-        ws.cell(row=1, column=column+1, value=label).alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        labelCell = typing.cast(cell.Cell, ws.cell(row=1, column=column+1, value=label) )
+        labelCell.alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
 
     rowNumber = 2
     # maxWidth = 0
-    for entry in outdb._db:
+    for entry in outdb.db:
         psName = entry["ps_name"]
         testResults = entry["test_results"]
-        widths = {wf: [] for wf in widthFields}
-        fits = {frf: [] for frf in fitResultFields}
+        widths: dict[str, list[float]] = {wf: [] for wf in widthFields}
+        fits: dict[str, list[float]] = {frf: [] for frf in fitResultFields}
         goodGlyphCount = 0
         haveWidths = False
 
         # maxWidth = max(maxWidth, stringWidth(psName, font))
 
         row = [psName]
-        scripts = set()
+        scripts: set[str] = set()
 
         for result in testResults.values():
             widthResults = result.get("widths", None)

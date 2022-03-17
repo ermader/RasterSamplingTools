@@ -1,0 +1,177 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "RasterSamplingTest ARMaokaiGB gid754",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/RasterSamplingTest.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--font",
+                "/Users/emader/Downloads/TestFonts/varying stroke 3/gmao00e.ttf",
+                "--outdb",
+                "armaokaigb.json",
+                "--bounds",
+                "both",
+                "--debug",
+                "--glyph",
+                "gid754"
+            ]
+        },
+        {
+            "name": "RasterSamplingTest ARMaokaiGB gid854",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/RasterSamplingTest.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--font",
+                "/Users/emader/Downloads/TestFonts/varying stroke 3/gmao00e.ttf",
+                "--outdb",
+                "armaokaigb.json",
+                "--bounds",
+                "both",
+                "--debug",
+                "--glyph",
+                "gid854"
+            ]
+        },
+        {
+            "name": "RasterSamplingTest ARMaokaiGB gid976",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/RasterSamplingTest.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--font",
+                "/Users/emader/Downloads/TestFonts/varying stroke 3/gmao00e.ttf",
+                "--outdb",
+                "armaokaigb.json",
+                "--bounds",
+                "both",
+                "--debug",
+                "--glyph",
+                "gid976"
+            ]
+        },
+        {
+            "name": "RasterSamplingTool DerivativeThreasholdTests",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/RasterSamplingTool.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--input",
+                "/Users/emader/Downloads/DerivativeThresholdTests/Fonts",
+                "--output",
+                "/Users/emader/VSCode/DerivativeThresholdTests/Results"
+            ]
+        },
+        {
+            "name": "RasterSamplingTool AppFonts",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/RasterSamplingTool.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--input",
+                "/Users/emader/Downloads/AppFonts",
+                "--output",
+                "/Users/emader/VSCode/RasterSamplingTests"
+            ]
+        },
+        {
+            "name": "RasterSamplingTool Eric-test-fonts",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/RasterSamplingTool.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--input",
+                "/Users/emader/Downloads/Eric-test-fonts",
+                "--output",
+                "/Users/emader/VSCode/RasterSamplingTests"
+            ]
+        },
+        {
+            "name": "RasterSamplingTool Eric-test-fonts-2",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/RasterSamplingTool.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--input",
+                "/Users/emader/Downloads/Eric-test-fonts-2",
+                "--output",
+                "/Users/emader/VSCode/RasterSamplingTests"
+            ]
+        },
+        {
+            "name": "RasterSamplingTool TestFonts",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/RasterSamplingTool.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--input",
+                "/Users/emader/Downloads/TestFonts",
+                "--output",
+                "/Users/emader/VSCode/RasterSamplingTests"
+            ]
+        },
+        {
+            "name": "RasterSamplingTool TTCTest",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/RasterSamplingTool.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--input",
+                "/Users/emader/TTCTest",
+                "--output",
+                "/Users/emader/VSCode/RasterSamplingTests"
+            ]
+        },
+        {
+            "name": "Summarize DerivativeThreasholdTests",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/Summarize.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--input",
+                "/Users/emader/VSCode/DerivativeThresholdTests/Results/OutputDatabase.json",
+                "--output",
+                "/Users/emader/VSCode/DerivativeThresholdTests/Results/OutputDatabaseSummary.xlsx"
+            ]
+        },
+        {
+            "name": "Summarize All",
+            "type": "python",
+            "request": "launch",
+            "program": "RasterSamplingTools/Summarize.py",
+            "console": "integratedTerminal",
+            "justMyCode": true,
+            "args": [
+                "--input",
+                "/Users/emader/Downloads/RasterSamplingTests/OutputDatabase.json",
+                "--output",
+                "/Users/emader/VSCode//RasterSamplingTests/OutputDatabaseSummary.xlsx"
+            ]
+        },
+    ]
+}
