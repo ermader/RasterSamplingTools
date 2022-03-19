@@ -13,7 +13,7 @@
             "justMyCode": true,
             "args": [
                 "--font",
-                "/Users/emader/Downloads/TestFonts/varying stroke 3/gmao00e.ttf",
+                "${env:HOME}/Downloads/TestFonts/varying stroke 3/gmao00e.ttf",
                 "--outdb",
                 "armaokaigb.json",
                 "--bounds",
@@ -32,7 +32,7 @@
             "justMyCode": true,
             "args": [
                 "--font",
-                "/Users/emader/Downloads/TestFonts/varying stroke 3/gmao00e.ttf",
+                "${env:HOME}/Downloads/TestFonts/varying stroke 3/gmao00e.ttf",
                 "--outdb",
                 "armaokaigb.json",
                 "--bounds",
@@ -51,7 +51,7 @@
             "justMyCode": true,
             "args": [
                 "--font",
-                "/Users/emader/Downloads/TestFonts/varying stroke 3/gmao00e.ttf",
+                "${env:HOME}/Downloads/TestFonts/varying stroke 3/gmao00e.ttf",
                 "--outdb",
                 "armaokaigb.json",
                 "--bounds",
@@ -70,9 +70,9 @@
             "justMyCode": true,
             "args": [
                 "--input",
-                "/Users/emader/Downloads/DerivativeThresholdTests/Fonts",
+                "${env:HOME}/Downloads/DerivativeThresholdTests/Fonts",
                 "--output",
-                "/Users/emader/VSCode/DerivativeThresholdTests/Results"
+                "${env:HOME}/VSCode/DerivativeThresholdTests/Results"
             ]
         },
         {
@@ -84,9 +84,9 @@
             "justMyCode": true,
             "args": [
                 "--input",
-                "/Users/emader/Downloads/AppFonts",
+                "${env:HOME}/Downloads/AppFonts",
                 "--output",
-                "/Users/emader/VSCode/RasterSamplingTests"
+                "${env:HOME}/VSCode/RasterSamplingTests"
             ]
         },
         {
@@ -98,9 +98,9 @@
             "justMyCode": true,
             "args": [
                 "--input",
-                "/Users/emader/Downloads/Eric-test-fonts",
+                "${env:HOME}/Downloads/Eric-test-fonts",
                 "--output",
-                "/Users/emader/VSCode/RasterSamplingTests"
+                "${env:HOME}/VSCode/RasterSamplingTests"
             ]
         },
         {
@@ -112,9 +112,9 @@
             "justMyCode": true,
             "args": [
                 "--input",
-                "/Users/emader/Downloads/Eric-test-fonts-2",
+                "${env:HOME}/Downloads/Eric-test-fonts-2",
                 "--output",
-                "/Users/emader/VSCode/RasterSamplingTests"
+                "${env:HOME}/VSCode/RasterSamplingTests"
             ]
         },
         {
@@ -126,9 +126,9 @@
             "justMyCode": true,
             "args": [
                 "--input",
-                "/Users/emader/Downloads/TestFonts",
+                "${env:HOME}/Downloads/TestFonts",
                 "--output",
-                "/Users/emader/VSCode/RasterSamplingTests"
+                "${env:HOME}/VSCode/RasterSamplingTests"
             ]
         },
         {
@@ -140,9 +140,9 @@
             "justMyCode": true,
             "args": [
                 "--input",
-                "/Users/emader/TTCTest",
+                "${env:HOME}/TTCTest",
                 "--output",
-                "/Users/emader/VSCode/RasterSamplingTests"
+                "${env:HOME}/VSCode/RasterSamplingTests"
             ]
         },
         {
@@ -154,9 +154,9 @@
             "justMyCode": true,
             "args": [
                 "--input",
-                "/Users/emader/VSCode/DerivativeThresholdTests/Results/OutputDatabase.json",
+                "${env:HOME}/VSCode/DerivativeThresholdTests/Results/OutputDatabase.json",
                 "--output",
-                "/Users/emader/VSCode/DerivativeThresholdTests/Results/OutputDatabaseSummary.xlsx"
+                "${env:HOME}/VSCode/DerivativeThresholdTests/Results/OutputDatabaseSummary.xlsx"
             ]
         },
         {
@@ -168,9 +168,9 @@
             "justMyCode": true,
             "args": [
                 "--input",
-                "/Users/emader/Downloads/RasterSamplingTests/OutputDatabase.json",
+                "${env:HOME}/Downloads/RasterSamplingTests/OutputDatabase.json",
                 "--output",
-                "/Users/emader/VSCode//RasterSamplingTests/OutputDatabaseSummary.xlsx"
+                "${env:HOME}/VSCode//RasterSamplingTests/OutputDatabaseSummary.xlsx"
             ]
         },
     ]
