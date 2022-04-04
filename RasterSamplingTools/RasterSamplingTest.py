@@ -717,14 +717,14 @@ class RasterSamplingTest(object):
             fig, ax = plt.subplots()
             outlineCenter = outlineBounds.left + outlineBounds.width / 2
             self.drawPathToAxis(path, outlineBounds, ax)
-            ax.text(
+            ax.text( # type: ignore
                 outlineCenter,
                 outlineBounds.top + 10,
                 f"{fullName}\n{charInfo}",
                 va="bottom",
                 ha="center",
             )
-            ax.text(
+            ax.text( # type: ignore
                 outlineCenter,
                 outlineBounds.bottom - 10,
                 f"No main contour\nLargest area is {outerAreaPercent}% of the total\nTallest height is {outerHeightPercent}% of the total",
@@ -977,7 +977,7 @@ class RasterSamplingTest(object):
         figSize = (figWidth * 1.5, figHeight * 1.5)
 
         fig = plt.figure(figsize=figSize, constrained_layout=True)
-        gs = GridSpec(5, 2, figure=fig, height_ratios=[5, 35, 10, 35, 15])
+        gs = GridSpec(5, 2, figure=fig, height_ratios=[5, 35, 10, 35, 15]) # type: ignore
         fig.suptitle(f"{fullName}\n{charInfo}")
 
         ax1 = fig.add_subplot(gs[:, 0])
