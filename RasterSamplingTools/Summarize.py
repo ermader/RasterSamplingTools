@@ -176,7 +176,7 @@ def main():
 
     # ws.column_dimensions["A"].bestFit = True
     # ws.column_dimensions["A"].auto_size = True
-    ws.column_dimensions["A"].width = 30  # maxWidth * .15?
+    ws.column_dimensions["A"].width = 30  # type: ignore # maxWidth * .15?
 
     wb.save(args.outputFile)
 
