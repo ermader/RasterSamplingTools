@@ -1,7 +1,11 @@
 {
-    "python.analysis.stubPath": "${env:HOME}/VSCode/TypeStubs/typings",
+    "python.analysis.stubPath": "../TypeStubs/typings",
     "errorLens.statusBarIconsUseBackground": false,
     "terminal.integrated.env.osx": {
         "PYTHONPATH": "${env:HOME}/VSCode/UnicodeData:${env:HOME}/VSCode/PathLib:${env:HOME}/VSCode/TestArguments:${env:HOME}/VSCode/RasterSamplingTools"
+    },
+    "terminal.integrated.env.windows": {
+        "PYTHONPATH": "..\\FontDocTools;..\\UnicodeData;..\\PathLib;..\\TestArguments;..\\RasterSamplingTools"
     }
+
 }
