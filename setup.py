@@ -14,7 +14,7 @@ setup(
     python_requires=">=3.9",
     install_requires=[
         "FontDocTools >= 1.2.1",
-        "UnicodeData >= 0.2"
+        "UnicodeData >= 0.2",
         "PathLib >= 0.2",
         "TestArguments >= 0.3",
         "numpy >= 1.21.2",
