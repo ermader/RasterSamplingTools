@@ -14,7 +14,7 @@ A tool for analyzing a glyph in a font.
   * find the rightmost in *intersections* on curves that have the opposite direction from the curve on the left edge of the stroke. Call this *p2r*.
   * construct a raster line from *p1* to *p2l* and append it to the list called *rastersLeft*.
   * construct a raster line from *p1* to *p2r* and append it to the list called *rastersRight*.
-* If the command line argument **\-\-loopDetecdtion** is present and *curveList* contains a single inner contour that extends at least 70% of the way to the top of the glyph, save its bounding rectangle as *innerBounds*.
+* If the command line argument **\-\-loopDetection** is present and *curveList* contains a single inner contour that extends at least 70% of the way to the top of the glyph, save its bounding rectangle as *innerBounds*.
 * For *rastersLeft* and *rastersRight*:
   * compute a list of the lengths of the rasters. These lengths are the width of the stroke at the raster line.
   * compute the 2nd derivative of the lengths.

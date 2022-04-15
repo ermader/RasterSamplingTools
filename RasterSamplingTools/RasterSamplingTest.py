@@ -48,7 +48,7 @@ Options:
 --glyph (char | /glyphName | uni<4-6 hex digits> | gid<1-5 decimal digits>)
 [--widthMethod (leftmost | rightmost | leastspread)] (default: leftmost)
 [--mainContour (largest | leftmost | rightmost | tallest)] (default: tallest)
-[--range XX-YY] (defalut: 30-70)
+[--range XX-YY] (default: 30-70)
 [--direction (ltr | rtl)] (default: ltr)
 [--outdb databaseFilePath]
 [--loopDetection]
@@ -102,16 +102,6 @@ class RasterSamplingTestArgs(TestArgs):
     }
 
     options = [
-        CommandLineOption(
-            "bounds",
-            lambda s, a: CommandLineOption.valueFromDict(
-                s.boundsTypes, a, "bounds type"
-            ),
-            lambda a: a.nextExtra("bounds"),
-            ("typeBounds", "glyphBounds"),
-            (False, False),
-            required=False,
-        ),
         CommandLineOption(
             "widthMethod",
             lambda s, a: CommandLineOption.valueFromDict(
@@ -170,9 +160,6 @@ class RasterSamplingTestArgs(TestArgs):
         self.silent = False
         self.showFullName = False
 
-        # these are here to make type checking happy
-        self.typeBounds = False
-        self.glyphBounds = False
         self.widthMethod = self.widthMethodLeftmost
         self.range = (30, 70)
         self.mainContourType = self.mainContourTallest
@@ -188,10 +175,11 @@ class RasterSamplingTestArgs(TestArgs):
     def processRange(self, rangeSpec: str) -> tuple[int, ...]:
         m = re.fullmatch("([0-9]{1,3})-([0-9]{1,3})", rangeSpec)
         if m:
-            # should check that the values are <= 100 and that first is lower than the second...
-            return tuple((int(s) for s in m.groups()))
-        else:
-            raise ValueError(f'Invalid range specification: "{rangeSpec}"')
+            lowValue, highValue = rangeValues = tuple((int(s) for s in m.groups()))
+            if lowValue < highValue <= 100:
+                return rangeValues
+            
+        raise ValueError(f'Invalid range specification: "{rangeSpec}"')
 
     @property
     def widthMethodName(self):

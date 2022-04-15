@@ -5,22 +5,23 @@ with open("README.md", "r") as file:
 
 setup(
     name="RasterSamplingTools",
-    version="1.0.5",
+    version="1.0.6",
     packages=find_packages(),
     package_data={
         "": ["FontDatabase.json"],
     },
 
-    python_requires=">=3.8",
+    python_requires=">=3.9",
     install_requires=[
         "FontDocTools >= 1.2.1",
-        "PathLib >= 0.1",
-        "TestArguments >= 0.2",
+        "UnicodeData >= 0.2"
+        "PathLib >= 0.2",
+        "TestArguments >= 0.3",
         "numpy >= 1.21.2",
         "matplotlib >= 3.4.3",
         "openpyxl >= 3.0.9",
         "scipy >= 1.7.1",
-        "statsmodels >= 0.12.2",
+        "statsmodels >= 0.13.2",
     ],
 
     entry_points={
@@ -45,7 +46,7 @@ setup(
         "License :: OSI Approved :: MIT License",
         "Natural Language :: English",
         "Operating System :: MacOS :: MacOS X",
-        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Topic :: Text Processing :: Fonts",
     ]
 )

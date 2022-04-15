@@ -6,25 +6,25 @@ The test_results object is a JSON object where the name of each field is the nam
 ## Glyph test_results Object
 * **code_points** : an array of (decimal) code points that map to this glyph
 * **glyph_id** : the glyph ID of the glyph
-* **contour_count** : the number of coutours in the glyph
+* **contour_count** : the number of contours in the glyph
 * **segment_counts** : an array containing the number of segments in each contour
 * **width_method** : the width method used to test the glyph
 * **main_contour** : the method used to select the main contour of the glyph
 * **direction** : the direction of the glyph
-* **main_contour_area_percent** : the percentage the area of the main contour is of the overall area of the glyph
-* **main_contour_height_percent** : the percentage the height of the main contour is of the overall height of the glyph
+* **main_contour_area_percent** : the area of the main contour expressed as a percentage of the total area of all glyph contours
+* **main_contour_height_percent** : tthe height of the main contour expressed as a percentage of the overall height of the glyph bounding box
 * **chosen_width_method** : the width method used to analyze the glyph
 * **raster_sample_range** : the range over which the raster samples are made
 * **fit_results** : a JSON object containing the results of calling `scipy.stats.linregress` on the midpoints of the lines where the rasters intersect the selected stroke
 * **widths** : a JSON object containing the `statistics.quantiles` of the stroke widths
 
 ## fit_results Object
-* **slope** : the slope of the line fitted through the midpoints of the midpoints of the lines where the rasters intersect the selected stroke
+* **slope** : the slope of the best-fit line through the midpoints of the midpoints of the lines where the rasters intersect the selected stroke
 * **intercept** : the coordinate where the fitted line intersects the axis
 * **r_value** : the r-value of the fitted line
 * **p_value** : the p-value of the fitted line
 * **std_err** : the standard error of the fit
-* **log_mean_orthogonal_distance** : the log of the mean orthorgonal distance of the points to the fitted line
+* **log_mean_orthogonal_distance** : the log of one plus the mean orthorgonal distance of the points to the fitted line
 * **stroke_angle** : the computed angle of the stroke, in degrees
 
 ## widths Object

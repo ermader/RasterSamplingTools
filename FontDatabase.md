@@ -1,5 +1,5 @@
 # Font Database
-`FontDatabase.json` is a file in JSON format used to determine a font which glyphs to test and how to test them.
+`FontDatabase.json` is a file in JSON format used to determine which glyphs in a font to test and how to test them.
 
 The file is an array of objects. The first object contains default settings, and the rest are per-font objects.
 
@@ -31,7 +31,7 @@ The default settings object has two fields:
 
 ## The per-font Object
 Per-font objects have the following fields:
-* **ps_name** : the postscript name of the the font
+* **ps_name** : the postscript name of the font
 * **family_name** : the family name of the font
 * **full_name** : the full name of the font
 * **tests** : an array of test objects
@@ -40,7 +40,7 @@ Per-font objects have the following fields:
 
 **Notes:**
 * Only one of *ps_name*, *family_name* or *full_name* should be given.
-* The per-font objects will be searched in the order in which they are given in the file, so they should be listed from most-specific to lest-specific.
+* The per-font objects will be searched in the order in which they are given in the file, so they should be listed from most-specific to least-specific.
 ### Example per-font objects:
     {
     "ps_name": "AyresRoyal",
